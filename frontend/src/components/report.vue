@@ -53,7 +53,6 @@
             <div>
                 <el-select v-model="serviceform.style"
                            style="width: 100%"
-                           popper-class="el-popper"
                            placeholder="请选择报告类型">
                     <el-option
                             v-for="item in options"
@@ -75,7 +74,6 @@
                 <el-select v-model="this.serviceform.orderid_id"
                            style="width: 100%"
                            placeholder="选择所属订单"
-                           popper-class="el-popper"
                            filterable>
                     <el-option
                             v-for="item in orderOptions"
@@ -235,10 +233,6 @@
 
     .el-form-item__content {
         margin-right: 5px;
-    }
-
-    .el-select-dropdown.el-popper{
-        background: white;
     }
 </style>
 
