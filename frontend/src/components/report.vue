@@ -53,6 +53,7 @@
             <div>
                 <el-select v-model="serviceform.style"
                            style="width: 100%"
+                           popper-class="el-popper"
                            placeholder="请选择报告类型">
                     <el-option
                             v-for="item in options"
@@ -74,6 +75,7 @@
                 <el-select v-model="this.serviceform.orderid_id"
                            style="width: 100%"
                            placeholder="选择所属订单"
+                           popper-class="el-popper"
                            filterable>
                     <el-option
                             v-for="item in orderOptions"
@@ -84,15 +86,6 @@
                     </el-option>
                 </el-select>
             </div>
-
-            <!--            <el-col>-->
-            <!--                    <el-row>-->
-            <!--                          <el-col :span="16">-->
-            <!--                                  -->
-            <!--                          </el-col>-->
-            <!--                    </el-row>-->
-            <!--            </el-col>-->
-
         </el-form-item>
         <el-form-item>
             <el-col>
@@ -225,7 +218,7 @@
         async created() {
             // 出库时，选择订单
             this.orderOptions = this.products.allorder;
-            console.log('orderOptions:', this.orderOptions)
+            // console.log('orderOptions:', this.orderOptions)
         }
     })
 
@@ -235,11 +228,17 @@
     .el-form-item {
         margin-top: 5px;
         margin-bottom: 5px;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
     }
 
     .el-form-item__content {
         margin-right: 5px;
     }
 
+    .el-select-dropdown.el-popper{
+        background: white;
+    }
 </style>
 

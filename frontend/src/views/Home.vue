@@ -5,7 +5,7 @@
         <el-header>
             <el-col :span="4" class="header_left">
                 <img class="myimg" src="../assets/logo1.png"/>
-                <span>荧飒光学</span>
+                <a href="http://www.insaoptics.com/"> 荧飒光学</a>
             </el-col>
             <el-col :span="17" class="header_div">
                 <el-menu
