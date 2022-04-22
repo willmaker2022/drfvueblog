@@ -4,7 +4,7 @@
     <div class="login">
         <div class="login_box">
             <div class="login_logo">
-                <img src="../assets/logo.png"/>
+                <img :src="logourl"/>
             </div>
             <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRul" class="login_form">
                 <el-form-item prop="username">
@@ -72,6 +72,7 @@
     export default {
         data() {
             return {
+                logourl: require('@/assets/logo1.png'),
                 registerVisible: false,
                 info: '',
                 loginForm: {

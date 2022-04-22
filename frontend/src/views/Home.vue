@@ -4,7 +4,7 @@
     <el-container class="home_content">
         <el-header>
             <el-col :span="4" class="header_left">
-                <img class="myimg" src="../assets/logo1.png">&nbsp;
+                <img class="myimg" :src="logourl">&nbsp;
                 <a href="http://www.insaoptics.com/">荧飒光学</a>
             </el-col>
             <el-col :span="16" class="header_div">
@@ -58,9 +58,11 @@
 <script>
     import axios from 'axios'
 
+
     export default {
         data() {
             return {
+                logourl: require('@/assets/logo1.png'),
                 hasLogin: true,
                 username: '',
             }
