@@ -23,6 +23,7 @@
                 <el-button type='primary' @click="buyStorgeVisible=true" :disabled="buyStorageDisabled?true:false">采购
                 </el-button>
                 <el-button type='primary' @click="adminStorageVisible=true">管理</el-button>
+                <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">库存表</span>
             </el-col>
         </el-row>
         <!--        数据列表-->

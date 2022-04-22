@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from .serializers import ProductplanSerializer, ProcessTestingSerializer \
     , ProcessAssembleSerializer, ProcessElPrepareSerializer, ProcessMePrepareSerializer \
-    , ProcessScPrepareSerializer, ProductHistorySerializer
+    , ProcessScPrepareSerializer, ProductHistorySerializer,\
+    ProcessSoftwareSerializer,ProcessPaymentSerializer,ProcessDeliverSerializer,ProcessBillingSerializer
 
 # Create your views here.
 from rest_framework import viewsets
 from .models import Productplan, ProcessTesting, ProcessAssemble, ProcessElPrepare,\
-    ProcessMePrepare, ProcessScPrepare, ProductHistory
+    ProcessMePrepare, ProcessScPrepare, ProductHistory,ProcessSoftware,ProcessBilling,\
+    ProcessPayment,ProcessDeliver
+
 from rest_framework import filters
 
 #订单计划表
@@ -53,6 +56,38 @@ class ProcessAssembleViewSet(viewsets.ModelViewSet):
 class ProcessTestingViewSet(viewsets.ModelViewSet):
     queryset = ProcessTesting.objects.all()
     serializer_class = ProcessTestingSerializer
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['orderid__orderid', 'orderid__customer']
+
+#软件
+class ProcessSoftwareViewSet(viewsets.ModelViewSet):
+    queryset = ProcessSoftware.objects.all()
+    serializer_class = ProcessSoftwareSerializer
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['orderid__orderid', 'orderid__customer']
+
+#付款
+class ProcessPaymentViewSet(viewsets.ModelViewSet):
+    queryset = ProcessPayment.objects.all()
+    serializer_class = ProcessPaymentSerializer
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['orderid__orderid', 'orderid__customer']
+
+#发货
+class ProcessDeliverViewSet(viewsets.ModelViewSet):
+    queryset = ProcessDeliver.objects.all()
+    serializer_class = ProcessDeliverSerializer
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['orderid__orderid', 'orderid__customer']
+
+#开票
+class ProcessBillingViewSet(viewsets.ModelViewSet):
+    queryset = ProcessBilling.objects.all()
+    serializer_class = ProcessBillingSerializer
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['orderid__orderid', 'orderid__customer']

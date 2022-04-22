@@ -4,10 +4,10 @@
     <el-container class="home_content">
         <el-header>
             <el-col :span="4" class="header_left">
-                <img class="myimg" src="../assets/logo1.png"/>
-                <a href="http://www.insaoptics.com/"> 荧飒光学</a>
+                <img class="myimg" src="../assets/logo1.png"/>&nbsp;
+                <a href="http://www.insaoptics.com/">荧飒光学</a>
             </el-col>
-            <el-col :span="17" class="header_div">
+            <el-col :span="16" class="header_div">
                 <el-menu
                         background-color="#95d475"
                         :router="true"
@@ -29,6 +29,7 @@
                             <span class="sub-menu-font">维修记录</span>
                         </template>
                         <el-menu-item index="service">维修记录</el-menu-item>
+                        <el-menu-item index="batchno">编号生成</el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu index="storage" popper-class="el-popper">
                         <template #title>
@@ -41,7 +42,7 @@
                     </el-sub-menu>
                 </el-menu>
             </el-col>
-            <el-col class="welcome" :span="3">
+            <el-col class="welcome" :span="4">
                 <span v-if="hasLogin">欢迎，{{ username }}  &nbsp;&nbsp;</span>
                 <div>
                     <el-button type="primary" @click.prevent="loginOut()">退出</el-button>
@@ -167,5 +168,11 @@
         width: 70px;
         height: 40px;
         border-radius: 4px;
+    }
+    .el-main{
+        padding: 0px;
+    }
+    .el-card{
+        height: 100%;
     }
 </style>

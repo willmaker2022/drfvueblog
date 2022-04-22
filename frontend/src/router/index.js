@@ -66,6 +66,11 @@ const routes =[
                 name: 'buystorage',
                 component:()=>import("../components/buystorage")
             },
+            {
+                path: 'batchno',
+                name: 'batchno',
+                component:()=>import("../components/batchno")
+            },
         ]
     },
     {

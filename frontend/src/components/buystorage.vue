@@ -1,9 +1,8 @@
 <template>
-    <h3>购买记录</h3>
     <el-card>
         <!--    搜索框和按钮-->
         <el-row :gutter="12" margin-bottom=20px>
-            <el-col :span="8">
+            <el-col :span="6">
                 <el-input
                         v-model="searchInfo"
                         placeholder="输入检索的内容"
@@ -12,8 +11,9 @@
                         @clear="goback"
                 />
             </el-col>
-            <el-col :span="4" align="left">
+            <el-col :span="18" align="left">
                 <el-button type='primary' @click="search">搜索</el-button>
+                <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">购买记录</span>
             </el-col>
 
         </el-row>

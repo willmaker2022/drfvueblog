@@ -1,8 +1,10 @@
 <template>
     <el-container>
-        <el-main>
-            <el-card>
-
+        <el-aside width="400px">
+            <report></report>
+        </el-aside>
+        <el-main style="padding: 0px">
+            <el-card style="height: 100%">
                 <!--    搜索框和按钮-->
                 <el-row :gutter="12" margin-bottom=20px>
                     <el-col :span="6">
@@ -19,6 +21,7 @@
                         <el-button type='danger' @click="deleteVisible=true"
                                    :disabled="removeDisabled?true:false">删除
                         </el-button>
+                        <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">维修报告</span>
                     </el-col>
                 </el-row>
                 <el-table :data="reports" border style="width: 100%"
@@ -75,9 +78,7 @@
                 </div>
             </el-card>
         </el-main>
-        <el-aside width="400px">
-            <report></report>
-        </el-aside>
+
     </el-container>
     <!--    <layout></layout>-->
     <!--    删除确认对话框-->
@@ -115,10 +116,8 @@
                 // 删除按钮使能
                 removeDisabled: true,
                 deleteVisible: false,
-
                 //当前选中条目
                 selectedRow: 0,
-
                 showbutton: true,
                 searchInfo: '',
                 reports: [],
@@ -224,17 +223,14 @@
     .el-aside {
         background: #ecf5ff;
     }
-
     .el-container {
         background: #d9ecff;
         height: 100%;
     }
-
     .el-row {
         margin-bottom: 20px;
         font-size: 20px;
     }
-
     .bottom {
         margin-top: 13px;
         line-height: 12px;
@@ -242,13 +238,11 @@
         justify-content: space-between;
         align-items: center;
     }
-
     .el-image {
         justify-content: center;
         display: flex;
         align-content: center;
     }
-
     >>> .el-image__inner {
         padding: 0px;
         width: auto;

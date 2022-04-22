@@ -1,5 +1,4 @@
 <template>
-    <h3>干涉仪状态</h3>
     <el-card>
         <!--    搜索框和按钮-->
         <el-row :gutter="12" margin-bottom=20px>
@@ -12,8 +11,9 @@
 
                 />
             </el-col>
-            <el-col :span="4" align="left">
+            <el-col :span="18" align="left">
                 <el-button type='primary' @click="search">搜索</el-button>
+                <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">干涉仪状态</span>
             </el-col>
 
         </el-row>

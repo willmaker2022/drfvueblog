@@ -163,6 +163,6 @@ SIMPLE_JWT = {
 }
 
 # 媒体文件地址
-MEDIA_URL = '/static_pictures/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static_pictures/')
+MEDIA_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/')
 

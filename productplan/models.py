@@ -134,6 +134,82 @@ class ProcessTesting(CommonInfo):
     def __str__(self):
         return self.orderid.customer
 
+#添加软件状态
+class ProcessSoftware(CommonInfo):
+    orderid = models.OneToOneField(
+        Productplan,
+        verbose_name="订单号",
+        on_delete=models.CASCADE,
+        related_name='prosw',
+        primary_key=True
+    )
+    # 更新时间
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-updated',)
+        verbose_name_plural = "软件"
+
+    def __str__(self):
+        return self.orderid.customer
+
+#添加付款状态
+class ProcessPayment(CommonInfo):
+    orderid = models.OneToOneField(
+        Productplan,
+        verbose_name="订单号",
+        on_delete=models.CASCADE,
+        related_name='propm',
+        primary_key=True
+    )
+    # 更新时间
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-updated',)
+        verbose_name_plural = "付款"
+
+    def __str__(self):
+        return self.orderid.customer
+
+#添加发货状态
+class ProcessDeliver(CommonInfo):
+    orderid = models.OneToOneField(
+        Productplan,
+        verbose_name="订单号",
+        on_delete=models.CASCADE,
+        related_name='prodi',
+        primary_key=True
+    )
+    # 更新时间
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-updated',)
+        verbose_name_plural = "发货"
+
+    def __str__(self):
+        return self.orderid.customer
+
+#添加开票状态
+class ProcessBilling(CommonInfo):
+    orderid = models.OneToOneField(
+        Productplan,
+        verbose_name="订单号",
+        on_delete=models.CASCADE,
+        related_name='probi',
+        primary_key=True
+    )
+    # 更新时间
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-updated',)
+        verbose_name_plural = "开票"
+
+    def __str__(self):
+        return self.orderid.customer
+
 class ProductHistory(models.Model):
     #操作者
     user = models.ForeignKey(

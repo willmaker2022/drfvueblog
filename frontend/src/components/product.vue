@@ -17,6 +17,7 @@
                 <el-button type='danger' @click="deleteVisible=true"
                            :disabled="removeDisabled?true:false">删除
                 </el-button>
+                <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">所有订单</span>
             </el-col>
         </el-row>
         <el-table :data="product" @row-click="rowClicked" border
@@ -50,25 +51,25 @@
             <el-table-column prop="serial" label="序列号" width="80"/>
             <el-table-column prop="startday" label="开始日期" width="100"/>
             <el-table-column prop="endday" label="交货日期" width="100"/>
-            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>
-            <el-table-column prop="status" label="整体状态" width="100">
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.status placeholder="Select"
-                               @change="changeProSta(scope.row)"
-                               :class="{'pending':scope.row.status === 'pending', 'process': scope.row.status === 'process', 'finish': scope.row.status === 'finish' }"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.status,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="elsta" label="电路板状态" width="100">
+<!--            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>-->
+<!--            <el-table-column prop="status" label="整体状态" width="80">-->
+<!--                <template v-slot:default="scope">-->
+<!--                    <el-select v-model=scope.row.status placeholder="Select"-->
+<!--                               @change="changeProSta(scope.row)"-->
+<!--                               :class="{'pending':scope.row.status === 'pending', 'process': scope.row.status === 'process', 'finish': scope.row.status === 'finish' }"-->
+<!--                    >-->
+<!--                        <el-option-->
+<!--                                v-for="item in staopts"-->
+<!--                                :key="item.value"-->
+<!--                                :label="item.label"-->
+<!--                                :value="item.value"-->
+<!--                                :disabled=getDisabledInfo(scope.row.status,item.value)-->
+<!--                        >-->
+<!--                        </el-option>-->
+<!--                    </el-select>-->
+<!--                </template>-->
+<!--            </el-table-column>-->
+            <el-table-column prop="elsta" label="电路板状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.elsta class="m-2" placeholder="Select"
                                @change="changeELSta(scope.row)"
@@ -85,7 +86,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="mesta" label="机械件状态" width="100">
+            <el-table-column prop="mesta" label="机械件状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.mesta class="m-2" placeholder="Select"
                                @change="changeMESta(scope.row)"
@@ -102,7 +103,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="scsta" label="干涉仪状态" width="100">
+            <el-table-column prop="scsta" label="干涉仪状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.scsta class="m-2" placeholder="Select"
                                @change="changeSCSta(scope.row)"
@@ -119,7 +120,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="assta" label="装配状态" width="100">
+            <el-table-column prop="assta" label="装配状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.assta class="m-2" placeholder="Select"
                                @change="changeASSta(scope.row)"
@@ -136,7 +137,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="tssta" label="测试状态" width="100">
+            <el-table-column prop="tssta" label="测试状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
                                @change="changeTSSta(scope.row)"
@@ -153,7 +154,75 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>
+            <el-table-column prop="swsta" label="软件状态" width="80">
+                <template v-slot:default="scope">
+                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                               @change="changeTSSta(scope.row)"
+                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                    >
+                        <el-option
+                                v-for="item in staopts"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                        >
+                        </el-option>
+                    </el-select>
+                </template>
+            </el-table-column>
+            <el-table-column prop="pmsta" label="付款状态" width="80">
+                <template v-slot:default="scope">
+                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                               @change="changeTSSta(scope.row)"
+                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                    >
+                        <el-option
+                                v-for="item in staopts"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                        >
+                        </el-option>
+                    </el-select>
+                </template>
+            </el-table-column>
+            <el-table-column prop="dista" label="发货状态" width="80">
+                <template v-slot:default="scope">
+                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                               @change="changeTSSta(scope.row)"
+                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                    >
+                        <el-option
+                                v-for="item in staopts"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                        >
+                        </el-option>
+                    </el-select>
+                </template>
+            </el-table-column>
+            <el-table-column prop="bista" label="开票状态" width="80">
+                <template v-slot:default="scope">
+                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                               @change="changeTSSta(scope.row)"
+                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                    >
+                        <el-option
+                                v-for="item in staopts"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                        >
+                        </el-option>
+                    </el-select>
+                </template>
+            </el-table-column>
+<!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
             <el-table-column prop="remark" label="备注" :show-overflow-tooltip="showtip">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
@@ -729,15 +798,15 @@
     }
 
     .pending >>> .el-input__inner {
-        background: #E6A23C !important;
+        background:    #f89898 !important;
     }
 
     .process >>> .el-input__inner {
-        background: #F56C6C !important;
+        background:   #eebe77 !important;
     }
 
     .finish >>> .el-input__inner {
-        background: #67C23A !important;
+        background:   #95d475 !important;
     }
 
     >>> .el-timeline-item__node {
@@ -750,6 +819,10 @@
 
     .el-table >>> td {
         padding: 0;
+    }
+    .el-table ::v-deep(.cell){
+        padding-left: 0px !important;
+        padding-right: 0px !important;
     }
 
 </style>

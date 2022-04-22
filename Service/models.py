@@ -2,9 +2,12 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from productplan.models import Productplan
-#为了删除图片
+# 为了删除图片
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+# 为了生成编号
+from django.core.exceptions import ValidationError
+
 
 # Create your models here.
 class Service(models.Model):
@@ -18,7 +21,7 @@ class Service(models.Model):
         related_name='order',
         primary_key=False
     )
-    #操作者
+    # 操作者
     user = models.ForeignKey(
         User,
         null=True,
@@ -34,23 +37,39 @@ class Service(models.Model):
     )
     style = models.CharField(
         max_length=10,
-        choices=style_choice ,
+        choices=style_choice,
         default='servicein',
         verbose_name="报告类型",
     )
 
     description = models.TextField(default="", null=True, blank=True, verbose_name="问题描述")
     actions = models.TextField(default="", null=True, blank=True, verbose_name="操作内容")
-    created = models.DateTimeField(default=timezone.now, null=True,verbose_name='创建时间')
+    created = models.DateTimeField(default=timezone.now, null=True, verbose_name='创建时间')
     pictures = models.ImageField(upload_to='service_pictures/%Y%m%d/', blank=True)
     # 备注
-    remark = models.TextField(default="",verbose_name="备注")
+    remark = models.TextField(default="", verbose_name="备注")
 
     class Meta:
         ordering = ('-created',)
         verbose_name_plural = "维修记录"
 
+
 @receiver(pre_delete, sender=Service)
 def delete(sender, instance, **kwargs):
     instance.pictures.delete(False)
 
+
+def validate_length(value, length=6):
+    if len(str(value)) != length:
+        raise ValidationError(u'%s is not the correct length' % value)
+
+
+# 编号生成器
+class BatchNo(models.Model):
+    description = models.TextField(default="", null=False, blank=False, verbose_name="描述")
+    batchno = models.CharField(default="", max_length=6,null=False, blank=False, verbose_name="编号", validators=[validate_length])
+    created = models.DateTimeField(default=timezone.now, null=True, verbose_name='创建时间')
+
+    class Meta:
+        ordering = ('-created',)
+        verbose_name_plural = "编号生成器"

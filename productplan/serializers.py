@@ -2,7 +2,8 @@ import datetime
 
 from rest_framework import serializers
 from .models import Productplan,ProcessTesting,ProcessScPrepare,\
-    ProcessMePrepare,ProcessElPrepare,ProcessAssemble, ProductHistory
+    ProcessMePrepare,ProcessElPrepare,ProcessAssemble, ProductHistory,\
+    ProcessBilling,ProcessDeliver,ProcessPayment,ProcessSoftware
 from user_info.serializers import UserDescSerializer
 
 #订单计划
@@ -19,6 +20,14 @@ class ProductplanSerializer(serializers.HyperlinkedModelSerializer):
     assta= serializers.SerializerMethodField()
     # 获取测试状态
     tssta = serializers.SerializerMethodField()
+    # 获取软件状态
+    swsta = serializers.SerializerMethodField()
+    # 获取付款状态
+    pmsta = serializers.SerializerMethodField()
+    # 获取发货状态
+    dista = serializers.SerializerMethodField()
+    # 获取开票状态
+    bista = serializers.SerializerMethodField()
     # 获取订单历史状态
     producthistory = serializers.SerializerMethodField()
     class Meta:
@@ -60,6 +69,38 @@ class ProductplanSerializer(serializers.HyperlinkedModelSerializer):
     def get_tssta(self, productplan_obj):
         try:
             status = productplan_obj.prots
+        except :
+            status = None
+        if status:
+            return status.status
+        return 'pending'
+    def get_swsta(self, productplan_obj):
+        try:
+            status = productplan_obj.prosw
+        except :
+            status = None
+        if status:
+            return status.status
+        return 'pending'
+    def get_pmsta(self, productplan_obj):
+        try:
+            status = productplan_obj.propm
+        except :
+            status = None
+        if status:
+            return status.status
+        return 'pending'
+    def get_dista(self, productplan_obj):
+        try:
+            status = productplan_obj.prodi
+        except :
+            status = None
+        if status:
+            return status.status
+        return 'pending'
+    def get_bista(self, productplan_obj):
+        try:
+            status = productplan_obj.probi
         except :
             status = None
         if status:
@@ -114,6 +155,42 @@ class ProcessTestingSerializer(serializers.HyperlinkedModelSerializer):
     orderid_id = serializers.IntegerField(write_only=True, allow_null=False, required=True)
     class Meta:
         model = ProcessTesting
+        fields = '__all__'
+
+#付款
+class ProcessPaymentSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    orderid = ProductplanSerializer(read_only=True)
+    orderid_id = serializers.IntegerField(write_only=True, allow_null=False, required=True)
+    class Meta:
+        model = ProcessPayment
+        fields = '__all__'
+
+#软件
+class ProcessSoftwareSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    orderid = ProductplanSerializer(read_only=True)
+    orderid_id = serializers.IntegerField(write_only=True, allow_null=False, required=True)
+    class Meta:
+        model = ProcessSoftware
+        fields = '__all__'
+
+#发货
+class ProcessDeliverSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    orderid = ProductplanSerializer(read_only=True)
+    orderid_id = serializers.IntegerField(write_only=True, allow_null=False, required=True)
+    class Meta:
+        model = ProcessDeliver
+        fields = '__all__'
+
+#开票
+class ProcessBillingSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    orderid = ProductplanSerializer(read_only=True)
+    orderid_id = serializers.IntegerField(write_only=True, allow_null=False, required=True)
+    class Meta:
+        model = ProcessBilling
         fields = '__all__'
 
 #订单历史
