@@ -172,7 +172,7 @@
                 this.serviceform.pictures = data.raw
                 this.showupload = data === "";
             },
-            onSubmit() {
+            async onSubmit() {
                 let param = new FormData()
                 param.append('pictures', this.serviceform.pictures)
                 param.append('orderid_id', this.serviceform.orderid_id)
@@ -191,7 +191,7 @@
                 });
                 // 在出入库记录中记录一行，包括借库人，数量，以及归属于哪个订单
                 if (auth) {
-                    axios.post('/api/home/service/', param,
+                    await axios.post('/api/home/service/', param,
                         {
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('access.product'),

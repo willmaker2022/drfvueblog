@@ -13,8 +13,14 @@ app.use(ElementPlus, {
 app.use(router)
 app.mount('#app')
 
-
 // axios.interceptors.request.use(config=>{
 //     console.log(config)
 //     return config;
 // })
+router.beforeEach((to, from, next) => {
+  /* 路由发生变化修改页面title */
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  next()
+})
