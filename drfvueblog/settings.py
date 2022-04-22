@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # 即前端打包文件所在位置
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/dist/"),
+    os.path.join(BASE_DIR, "static/"),
 ]
 
 # 新增项。静态文件收集目录
