@@ -85,8 +85,7 @@
             },
             //修改更新时间为只有日期
             formatUpdated(row){
-                let date = new Date(row.operateday);
-                return date.toISOString().substr(0,16,16).replace('T',' ') ;
+                return row.operateday.substr(0,16,16).replace('T',' ') ;
             },
             getOutStorage(){
                 axios.get('/api/home/inoutstorage/',{params:{direction:'out'}}).then(res => {

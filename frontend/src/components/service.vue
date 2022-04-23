@@ -1,10 +1,10 @@
 <template>
-    <el-container>
+    <el-container >
         <el-aside width="400px">
             <report></report>
         </el-aside>
-        <el-main style="padding: 0px">
-            <el-card style="height: 100%">
+        <el-main style="padding: 0px; ">
+            <el-card style="height: 100%; overflow: scroll" >
                 <!--    搜索框和按钮-->
                 <el-row :gutter="12" margin-bottom=20px>
                     <el-col :span="6">
@@ -129,8 +129,7 @@
         methods: {
             //修改更新时间为只有日期
             formatUpdated(row) {
-                let date = new Date(row.created);
-                return date.toISOString().substr(0, 16, 16).replace('T', ' ');
+                return row.created.substr(0, 16, 16).replace('T', ' ');
             },
             async getReports() {
                 await axios.get('/api/home/service/').then(res => {

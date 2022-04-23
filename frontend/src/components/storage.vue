@@ -530,8 +530,7 @@
         methods: {
             //修改更新时间为只有日期
             formatUpdated(row) {
-                let date = new Date(row.updated);
-                return date.toISOString().substr(0, 16, 16).replace('T', ' ');
+                return row.updated.substr(0, 16, 16).replace('T', ' ');
             },
             //修改时间显示格式
             formatedate(str) {

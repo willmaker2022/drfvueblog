@@ -562,8 +562,7 @@
             },
             //修改更新时间为只有日期
             formatUpdated(row) {
-                let date = new Date(row.updated);
-                return date.toISOString().substr(0, 10, 10).replace('T', ' ');
+                return row.updated.substr(0, 10, 10).replace('T', ' ');
             },
             //修改订单类型显示
             formateCategory(row) {

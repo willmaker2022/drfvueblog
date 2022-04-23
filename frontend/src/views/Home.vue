@@ -139,7 +139,9 @@
     }
 
     .el-main {
+        height: 100%;
         background: rgb(234, 237, 241);
+        padding: 0px;
     }
 
     .welcome {
@@ -171,9 +173,7 @@
         height: 40px;
         border-radius: 4px;
     }
-    .el-main{
-        padding: 0px;
-    }
+
     .el-card{
         height: 100%;
     }
