@@ -78,7 +78,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.elsta,item.value)
@@ -95,7 +94,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.mesta,item.value)
@@ -112,7 +110,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.scsta,item.value)
@@ -129,7 +126,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.assta,item.value)
@@ -146,7 +142,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.tssta,item.value)
@@ -163,7 +158,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.swsta,item.value)
@@ -180,7 +174,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.pmsta,item.value)
@@ -197,7 +190,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.dista,item.value)
@@ -214,7 +206,6 @@
                     >
                         <el-option
                                 v-for="item in staopts"
-                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
                                 :disabled=getDisabledInfo(scope.row.bista,item.value)
