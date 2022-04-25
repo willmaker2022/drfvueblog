@@ -72,7 +72,7 @@
             <!--            </el-table-column>-->
             <el-table-column prop="elsta" label="电路板状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.elsta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.elsta
                                @change="changeELSta(scope.row)"
                                :class="scope.row.elsta"
                     >
@@ -89,7 +89,7 @@
             </el-table-column>
             <el-table-column prop="mesta" label="机械件状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.mesta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.mesta
                                @change="changeMESta(scope.row)"
                                :class="scope.row.mesta"
                     >
@@ -106,7 +106,7 @@
             </el-table-column>
             <el-table-column prop="scsta" label="干涉仪状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.scsta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.scsta
                                @change="changeSCSta(scope.row)"
                                :class="scope.row.scsta"
                     >
@@ -123,7 +123,7 @@
             </el-table-column>
             <el-table-column prop="assta" label="装配状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.assta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.assta
                                @change="changeASSta(scope.row)"
                                :class="scope.row.assta"
                     >
@@ -140,7 +140,7 @@
             </el-table-column>
             <el-table-column prop="tssta" label="测试状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.tssta
                                @change="changeTSSta(scope.row)"
                                :class="scope.row.tssta"
                     >
@@ -157,7 +157,7 @@
             </el-table-column>
             <el-table-column prop="swsta" label="软件状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.swsta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.swsta
                                @change="changeTSSta(scope.row)"
                                :class="scope.row.swsta"
                     >
@@ -174,7 +174,7 @@
             </el-table-column>
             <el-table-column prop="pmsta" label="付款状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.pmsta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.pmsta
                                @change="changeTSSta(scope.row)"
                                :class="scope.row.pmsta"
                     >
@@ -191,7 +191,7 @@
             </el-table-column>
             <el-table-column prop="dista" label="发货状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.dista class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.dista
                                @change="changeTSSta(scope.row)"
                                :class="scope.row.dista"
                     >
@@ -208,7 +208,7 @@
             </el-table-column>
             <el-table-column prop="bista" label="开票状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.bista class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.bista
                                @change="changeTSSta(scope.row)"
                                :class="scope.row.bista"
                     >
