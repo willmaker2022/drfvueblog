@@ -1,7 +1,7 @@
 <template>
     <el-card>
         <!--    搜索框和按钮-->
-        <el-row :gutter="12" margin-bottom=20px class="row-button" >
+        <el-row :gutter="12" margin-bottom=20px class="row-button">
             <el-col :span="6">
                 <el-input
                         v-model="searchInfo"
@@ -23,6 +23,7 @@
         <el-table :data="product" @row-click="rowClicked" border
                   @cell-dblclick="editCell"
                   highlight-current-row
+                  :lazy="true"
                   :row-style="{height:'20px'}">
             <el-table-column type="expand">
                 <template #default="props">
@@ -51,29 +52,29 @@
             <el-table-column prop="serial" label="序列号" width="80"/>
             <el-table-column prop="startday" label="开始日期" width="100"/>
             <el-table-column prop="endday" label="交货日期" width="100"/>
-<!--            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>-->
-<!--            <el-table-column prop="status" label="整体状态" width="80">-->
-<!--                <template v-slot:default="scope">-->
-<!--                    <el-select v-model=scope.row.status placeholder="Select"-->
-<!--                               @change="changeProSta(scope.row)"-->
-<!--                               :class="{'pending':scope.row.status === 'pending', 'process': scope.row.status === 'process', 'finish': scope.row.status === 'finish' }"-->
-<!--                    >-->
-<!--                        <el-option-->
-<!--                                v-for="item in staopts"-->
-<!--                                :key="item.value"-->
-<!--                                :label="item.label"-->
-<!--                                :value="item.value"-->
-<!--                                :disabled=getDisabledInfo(scope.row.status,item.value)-->
-<!--                        >-->
-<!--                        </el-option>-->
-<!--                    </el-select>-->
-<!--                </template>-->
-<!--            </el-table-column>-->
+            <!--            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>-->
+            <!--            <el-table-column prop="status" label="整体状态" width="80">-->
+            <!--                <template v-slot:default="scope">-->
+            <!--                    <el-select v-model=scope.row.status placeholder="Select"-->
+            <!--                               @change="changeProSta(scope.row)"-->
+            <!--                               :class="{'pending':scope.row.status === 'pending', 'process': scope.row.status === 'process', 'finish': scope.row.status === 'finish' }"-->
+            <!--                    >-->
+            <!--                        <el-option-->
+            <!--                                v-for="item in staopts"-->
+            <!--                                :key="item.value"-->
+            <!--                                :label="item.label"-->
+            <!--                                :value="item.value"-->
+            <!--                                :disabled=getDisabledInfo(scope.row.status,item.value)-->
+            <!--                        >-->
+            <!--                        </el-option>-->
+            <!--                    </el-select>-->
+            <!--                </template>-->
+            <!--            </el-table-column>-->
             <el-table-column prop="elsta" label="电路板状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.elsta class="m-2" placeholder="Select"
                                @change="changeELSta(scope.row)"
-                               :class="{'pending':scope.row.elsta === 'pending', 'process': scope.row.elsta === 'process', 'finish': scope.row.elsta === 'finish' }"
+                               :class="scope.row.elsta"
                     >
                         <el-option
                                 v-for="item in staopts"
@@ -90,7 +91,7 @@
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.mesta class="m-2" placeholder="Select"
                                @change="changeMESta(scope.row)"
-                               :class="{'pending':scope.row.mesta === 'pending', 'process': scope.row.mesta === 'process', 'finish': scope.row.mesta === 'finish' }"
+                               :class="scope.row.mesta"
                     >
                         <el-option
                                 v-for="item in staopts"
@@ -107,7 +108,7 @@
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.scsta class="m-2" placeholder="Select"
                                @change="changeSCSta(scope.row)"
-                               :class="{'pending':scope.row.scsta === 'pending', 'process': scope.row.scsta === 'process', 'finish': scope.row.scsta === 'finish' }"
+                               :class="scope.row.scsta"
                     >
                         <el-option
                                 v-for="item in staopts"
@@ -124,7 +125,7 @@
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.assta class="m-2" placeholder="Select"
                                @change="changeASSta(scope.row)"
-                               :class="{'pending':scope.row.assta === 'pending', 'process': scope.row.assta === 'process', 'finish': scope.row.assta === 'finish' }"
+                               :class="scope.row.assta"
                     >
                         <el-option
                                 v-for="item in staopts"
@@ -141,7 +142,7 @@
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
                                @change="changeTSSta(scope.row)"
-                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                               :class="scope.row.tssta"
                     >
                         <el-option
                                 v-for="item in staopts"
@@ -156,16 +157,16 @@
             </el-table-column>
             <el-table-column prop="swsta" label="软件状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.swsta class="m-2" placeholder="Select"
                                @change="changeTSSta(scope.row)"
-                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                               :class="scope.row.swsta"
                     >
                         <el-option
                                 v-for="item in staopts"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                                :disabled=getDisabledInfo(scope.row.swsta,item.value)
                         >
                         </el-option>
                     </el-select>
@@ -173,16 +174,16 @@
             </el-table-column>
             <el-table-column prop="pmsta" label="付款状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.pmsta class="m-2" placeholder="Select"
                                @change="changeTSSta(scope.row)"
-                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                               :class="scope.row.pmsta"
                     >
                         <el-option
                                 v-for="item in staopts"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                                :disabled=getDisabledInfo(scope.row.pmsta,item.value)
                         >
                         </el-option>
                     </el-select>
@@ -190,16 +191,16 @@
             </el-table-column>
             <el-table-column prop="dista" label="发货状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.dista class="m-2" placeholder="Select"
                                @change="changeTSSta(scope.row)"
-                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                               :class="scope.row.dista"
                     >
                         <el-option
                                 v-for="item in staopts"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                                :disabled=getDisabledInfo(scope.row.dista,item.value)
                         >
                         </el-option>
                     </el-select>
@@ -207,22 +208,22 @@
             </el-table-column>
             <el-table-column prop="bista" label="开票状态" width="80">
                 <template v-slot:default="scope">
-                    <el-select v-model=scope.row.tssta class="m-2" placeholder="Select"
+                    <el-select v-model=scope.row.bista class="m-2" placeholder="Select"
                                @change="changeTSSta(scope.row)"
-                               :class="{'pending':scope.row.tssta === 'pending', 'process': scope.row.tssta === 'process', 'finish': scope.row.tssta === 'finish' }"
+                               :class="scope.row.bista"
                     >
                         <el-option
                                 v-for="item in staopts"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                                :disabled=getDisabledInfo(scope.row.bista,item.value)
                         >
                         </el-option>
                     </el-select>
                 </template>
             </el-table-column>
-<!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
+            <!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
             <el-table-column prop="remark" label="备注" :show-overflow-tooltip="showtip">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
@@ -341,6 +342,7 @@
     import {BIconAlarm} from 'bootstrap-icons-vue'
     // 所有订单
     const orders = {
+        product: [],
         allorder: [],
         pages: 0,
     }
@@ -349,6 +351,8 @@
         await axios.get('/api/home/product/').then(res => {
             orders.pages = Math.ceil(res.data.count / 20);
             orders.allorder = res.data.results;
+            console.log('from const page0', orders.allorder)
+            orders.product = res.data.results;
         })
         for (var n = 1; n < orders.pages; n++) {
             await axios.get('/api/home/product/', {params: {page: n}})
@@ -357,6 +361,8 @@
                         orders.allorder.push(res.data.results[index]);
                     }
                 })
+            console.log('from const page:', n)
+
         }
         return orders.allorder;
     }
@@ -368,8 +374,8 @@
             Search,
             BIconAlarm,
         },
-        orders,
-        products: products(),
+        // orders,
+        // products: products(),
         data() {
             return {
                 // 删除按钮使能
@@ -546,6 +552,8 @@
                     this.product = res.data.results;
                     this.total = res.data.count;
                     this.pageCount = Math.ceil(this.total / 20);
+                    console.log('from create page0')
+
                 });
             },
             getProductPage(page) {
@@ -797,15 +805,15 @@
     }
 
     .pending >>> .el-input__inner {
-        background:    #f89898 !important;
+        background: #f89898 !important;
     }
 
     .process >>> .el-input__inner {
-        background:   #eebe77 !important;
+        background: #eebe77 !important;
     }
 
     .finish >>> .el-input__inner {
-        background:   #95d475 !important;
+        background: #95d475 !important;
     }
 
     >>> .el-timeline-item__node {
@@ -819,7 +827,8 @@
     .el-table >>> td {
         padding: 0;
     }
-    .el-table ::v-deep(.cell){
+
+    .el-table ::v-deep(.cell) {
         padding-left: 0px !important;
         padding-right: 0px !important;
     }
