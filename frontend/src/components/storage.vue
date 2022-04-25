@@ -27,7 +27,9 @@
             </el-col>
         </el-row>
         <!--        数据列表-->
-        <el-table :data="storage" border style="width: 100%" @row-click="rowClicked"
+        <el-table v-loading.fullscreen.lock="storage.length>0 ? false: true"
+                  element-loading-text="数据正在加载中..."
+                  :data="storage" border style="width: 100%" @row-click="rowClicked"
                   :row-class-name="tableRowClassStatus"
                   highlight-current-row
                   :row-style="{height:'20px'}"

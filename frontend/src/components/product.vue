@@ -20,10 +20,11 @@
                 <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">所有订单</span>
             </el-col>
         </el-row>
-        <el-table :data="product" @row-click="rowClicked" border
+        <el-table v-loading.fullscreen.lock="product.length>0 ? false: true" :data="product" @row-click="rowClicked" border
                   @cell-dblclick="editCell"
+                  element-loading-text="数据正在加载中..."
+                  style="width: 100%"
                   highlight-current-row
-                  :lazy="true"
                   :row-style="{height:'20px'}">
             <el-table-column type="expand">
                 <template #default="props">
@@ -544,6 +545,7 @@
                     this.total = res.data.count;
                     this.pageCount = Math.ceil(this.total / 20);
                     console.log('from create page0')
+                    this.$forceUpdate();
 
                 });
             },
@@ -824,4 +826,7 @@
         padding-right: 0px !important;
     }
 
+    body {
+        margin: 0;
+    }
 </style>
