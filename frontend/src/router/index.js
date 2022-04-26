@@ -63,6 +63,14 @@ const routes = [
                 },
             },
             {
+                path: 'swsta',
+                name: 'swsta',
+                component: () => import("../components/swsta"),
+                meta: {
+                    title: "软件状态"
+                },
+            },
+            {
                 path: 'service',
                 name: 'service',
                 component: () => import("../components/service"),

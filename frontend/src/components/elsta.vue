@@ -133,9 +133,7 @@
                 var data = {}
                 data[item] = val
                 console.log(row)
-                axios.patch('/api/home/processelprepare/' + row.orderid.id + '/', data).then(res => {
-                    console.log('pathch:',res)
-                })
+                axios.patch('/api/home/processelprepare/' + row.orderid.id + '/', data)
             },
         },
         // 初始化是时导入出库记录表

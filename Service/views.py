@@ -24,4 +24,4 @@ class BatchNoViewSet(viewsets.ModelViewSet):
     serializer_class = BatchNoSerializer
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['description']
+    search_fields = ['description', 'batchno']

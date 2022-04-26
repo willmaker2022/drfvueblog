@@ -59,7 +59,7 @@ def delete(sender, instance, **kwargs):
     instance.pictures.delete(False)
 
 
-def validate_length(value, length=6):
+def validate_length(value, length=5):
     if len(str(value)) != length:
         raise ValidationError(u'%s is not the correct length' % value)
 
@@ -67,7 +67,7 @@ def validate_length(value, length=6):
 # 编号生成器
 class BatchNo(models.Model):
     description = models.TextField(default="", null=False, blank=False, verbose_name="描述")
-    batchno = models.CharField(default="", max_length=6,null=False, blank=False, verbose_name="编号", validators=[validate_length])
+    batchno = models.CharField(default="", max_length=5,null=False, blank=False, verbose_name="编号", validators=[validate_length])
     created = models.DateTimeField(default=timezone.now, null=True, verbose_name='创建时间')
 
     class Meta:

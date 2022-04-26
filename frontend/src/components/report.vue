@@ -76,7 +76,7 @@
                            placeholder="选择所属订单"
                            filterable>
                     <el-option
-                            v-for="item in orderOptions"
+                            v-for="item in orders"
                             :key="item.customer"
                             :label="item.customer"
                             :value="item.id"
@@ -100,7 +100,6 @@
     import upload from './upload'
     import authorization from "../../utils/authorization";
     import axios from "axios";
-    import products from "./product";
     //为刷新页面而添加
     import {inject} from 'vue'
 
@@ -123,7 +122,6 @@
         },
         data() {
             return {
-                products: products.orders,
                 options: [
                     {
                         value: 'servicein',
@@ -150,7 +148,7 @@
                 record: "",
                 showupload: true,
                 //填写维修报告时，选择所属订单（用户名，序列号）
-                orderOptions: [],
+                orders: [],
             }
         },
         methods: {
@@ -211,11 +209,27 @@
                 })
                 return a;
             },
+            async getProducts() {
+                let pages;
+                //第一次读取，得到页数。
+                await axios.get('/api/home/product/').then(res => {
+                    pages = Math.ceil(res.data.count / 20);
+                    this.orders = res.data.results;
+                })
+                for (var n = 1; n < pages; n++) {
+                    await axios.get('/api/home/product/', {params: {page: n}})
+                        .then(res => {
+                            for (var index = 0; index < res.data.results.length; index++) {
+                                this.orders.push(res.data.results[index]);
+                            }
+                        })
+                }
+            },
         },
         // 页面初始化
         async created() {
             // 出库时，选择订单
-            this.orderOptions = this.products.allorder;
+            await this.getProducts();
             // console.log('orderOptions:', this.orderOptions)
         }
     })

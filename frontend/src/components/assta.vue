@@ -128,9 +128,7 @@
                 var data = {}
                 data[item] = val
                 console.log(row)
-                axios.patch('/api/home/processassemble/' + row.orderid.id + '/', data).then(res => {
-                    console.log('pathch:',res)
-                })
+                axios.patch('/api/home/processassemble/' + row.orderid.id + '/', data)
             },
 
         },

@@ -92,7 +92,6 @@
                     this.scdata = res.data.results;
                     this.total = res.data.count;
                     this.pageCount = Math.ceil(this.total / 20);
-                    console.log(this.scdata);
                 })
             },
             getscdataPage(page){
@@ -129,10 +128,7 @@
             patchStorge(item, val, row) {
                 var data = {}
                 data[item] = val
-                console.log(row)
-                axios.patch('/api/home/processscprepare/' + row.orderid.id + '/', data).then(res => {
-                    console.log('pathch:',res)
-                })
+                axios.patch('/api/home/processscprepare/' + row.orderid.id + '/', data)
             },
         },
         // 初始化是时导入出库记录表

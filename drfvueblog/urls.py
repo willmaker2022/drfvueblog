@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from user_info.views import UserViewSet
 from productplan.views import ProductViewSet, ProcessTestingViewSet, ProcessAssembleViewSet \
     , ProcessElPrepareViewSet, ProcessMePrepareViewSet, ProcessScPrepareViewSet, ProductHistoryViewSet,\
-    ProcessSoftwareViewSet,ProcessBillingViewSet,ProcessDeliverViewSet,ProcessBilling
+    ProcessSoftwareViewSet,ProcessBillingViewSet,ProcessDeliverViewSet,ProcessPaymentViewSet
 from storage.views import StorageViewSet,InOutStorageViewSet
 from Service.views import ServiceViewSet,BatchNoViewSet
 from rest_framework_simplejwt.views import (
@@ -38,7 +38,7 @@ router.register(r'home/processelprepare',ProcessElPrepareViewSet)
 router.register(r'home/processmeprepare',ProcessMePrepareViewSet)
 router.register(r'home/processscprepare',ProcessScPrepareViewSet)
 router.register(r'home/processassemble',ProcessAssembleViewSet)
-router.register(r'home/processpayment',ProcessSoftwareViewSet)
+router.register(r'home/processpayment',ProcessPaymentViewSet)
 router.register(r'home/processtesting',ProcessTestingViewSet)
 router.register(r'home/processdeliver',ProcessDeliverViewSet)
 router.register(r'home/processsoftware',ProcessSoftwareViewSet)

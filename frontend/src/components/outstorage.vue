@@ -6,7 +6,6 @@
                 <el-input
                         v-model="searchInfo"
                         placeholder="输入检索的内容"
-                        :prefix-icon="Search"
                         clearable
                         @clear="goback"
                 />

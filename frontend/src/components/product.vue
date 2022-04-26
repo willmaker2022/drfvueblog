@@ -20,7 +20,8 @@
                 <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">所有订单</span>
             </el-col>
         </el-row>
-        <el-table v-loading.fullscreen.lock="product.length>0 ? false: true" :data="product" @row-click="rowClicked" border
+        <el-table v-loading.fullscreen.lock="loading" :data="product" @row-click="rowClicked"
+                  border
                   @cell-dblclick="editCell"
                   element-loading-text="数据正在加载中..."
                   style="width: 100%"
@@ -53,24 +54,24 @@
             <el-table-column prop="serial" label="序列号" width="80"/>
             <el-table-column prop="startday" label="开始日期" width="100"/>
             <el-table-column prop="endday" label="交货日期" width="100"/>
-            <!--            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>-->
-            <!--            <el-table-column prop="status" label="整体状态" width="80">-->
-            <!--                <template v-slot:default="scope">-->
-            <!--                    <el-select v-model=scope.row.status placeholder="Select"-->
-            <!--                               @change="changeProSta(scope.row)"-->
-            <!--                               :class="{'pending':scope.row.status === 'pending', 'process': scope.row.status === 'process', 'finish': scope.row.status === 'finish' }"-->
-            <!--                    >-->
-            <!--                        <el-option-->
-            <!--                                v-for="item in staopts"-->
-            <!--                                :key="item.value"-->
-            <!--                                :label="item.label"-->
-            <!--                                :value="item.value"-->
-            <!--                                :disabled=getDisabledInfo(scope.row.status,item.value)-->
-            <!--                        >-->
-            <!--                        </el-option>-->
-            <!--                    </el-select>-->
-            <!--                </template>-->
-            <!--            </el-table-column>-->
+<!--            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>-->
+<!--            <el-table-column prop="status" label="整体状态" width="80">-->
+<!--                <template v-slot:default="scope">-->
+<!--                    <el-select v-model=scope.row.status-->
+<!--                               @change="changeProSta(scope.row)"-->
+<!--                               :class="scope.row.status"-->
+<!--                    >-->
+<!--                        <el-option-->
+<!--                                v-for="item in staopts"-->
+<!--                                :key="item.value"-->
+<!--                                :label="item.label"-->
+<!--                                :value="item.value"-->
+<!--                                :disabled=getDisabledInfo(scope.row.status,item.value)-->
+<!--                        >-->
+<!--                        </el-option>-->
+<!--                    </el-select>-->
+<!--                </template>-->
+<!--            </el-table-column>-->
             <el-table-column prop="elsta" label="电路板状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.elsta
@@ -159,7 +160,7 @@
             <el-table-column prop="swsta" label="软件状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.swsta
-                               @change="changeTSSta(scope.row)"
+                               @change="changeSWSta(scope.row)"
                                :class="scope.row.swsta"
                     >
                         <el-option
@@ -176,7 +177,7 @@
             <el-table-column prop="pmsta" label="付款状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.pmsta
-                               @change="changeTSSta(scope.row)"
+                               @change="changePMSta(scope.row)"
                                :class="scope.row.pmsta"
                     >
                         <el-option
@@ -193,7 +194,7 @@
             <el-table-column prop="dista" label="发货状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.dista
-                               @change="changeTSSta(scope.row)"
+                               @change="changeDISta(scope.row)"
                                :class="scope.row.dista"
                     >
                         <el-option
@@ -210,7 +211,7 @@
             <el-table-column prop="bista" label="开票状态" width="80">
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.bista
-                               @change="changeTSSta(scope.row)"
+                               @change="changeBISta(scope.row)"
                                :class="scope.row.bista"
                     >
                         <el-option
@@ -224,7 +225,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
+<!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
             <el-table-column prop="remark" label="备注" :show-overflow-tooltip="showtip">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
@@ -342,43 +343,39 @@
     import authorization from "../../utils/authorization";
     import {BIconAlarm} from 'bootstrap-icons-vue'
     // 所有订单
-    const orders = {
-        product: [],
-        allorder: [],
-        pages: 0,
-    }
-    const products = async () => {
-        //第一次读取，得到页数。
-        await axios.get('/api/home/product/').then(res => {
-            orders.pages = Math.ceil(res.data.count / 20);
-            orders.allorder = res.data.results;
-            console.log('from const page0', orders.allorder)
-            orders.product = res.data.results;
-        })
-        for (var n = 1; n < orders.pages; n++) {
-            await axios.get('/api/home/product/', {params: {page: n}})
-                .then(res => {
-                    for (var index = 0; index < res.data.results.length; index++) {
-                        orders.allorder.push(res.data.results[index]);
-                    }
-                })
-            console.log('from const page:', n)
-
-        }
-        return orders.allorder;
-    }
-
-
+    // const orders = {
+    //     product: [],
+    //     allorder: [],
+    //     pages: 0,
+    // }
+    // const products = async () => {
+    //     //第一次读取，得到页数。
+    //     await axios.get('/api/home/product/').then(res => {
+    //         orders.pages = Math.ceil(res.data.count / 20);
+    //         orders.allorder = res.data.results;
+    //         orders.product = res.data.results;
+    //     })
+    //     for (var n = 1; n < orders.pages; n++) {
+    //         await axios.get('/api/home/product/', {params: {page: n}})
+    //             .then(res => {
+    //                 for (var index = 0; index < res.data.results.length; index++) {
+    //                     orders.allorder.push(res.data.results[index]);
+    //                 }
+    //             })
+    //     }
+    //     return orders.allorder;
+    // }
     export default {
         name: "productPlan",
         components: {
             Search,
             BIconAlarm,
         },
-        orders,
-        products: products(),
+        // orders,
+        // products: products(),
         data() {
             return {
+                loading: true,
                 // 删除按钮使能
                 removeDisabled: true,
                 deleteVisible: false,
@@ -525,6 +522,7 @@
                 } else {
                     this.product = []
                 }
+                this.loading=false;
             },
             //修改select的disabled参数
             getDisabledInfo(sta, selectValue) {
@@ -548,14 +546,12 @@
                 var temp = str.replace('T', ' ');
                 return temp.substr(0, 16, 16);
             },
-            getProduct() {
-                axios.get('/api/home/product/').then(res => {
+            async getProduct() {
+                await axios.get('/api/home/product/').then(res => {
                     this.product = res.data.results;
                     this.total = res.data.count;
                     this.pageCount = Math.ceil(this.total / 20);
-                    console.log('from create page0')
-                    this.$forceUpdate();
-
+                    this.loading=false;
                 });
             },
             getProductPage(page) {
@@ -565,9 +561,11 @@
                     }
                 }).then(res => {
                     this.product = res.data.results;
+                    this.loading=false;
                 })
             },
             CurrentChange(currentPage) {
+                this.loading=true;
                 this.getProductPage(currentPage);
             },
             //修改更新时间为只有日期
@@ -707,6 +705,26 @@
                 await this.changeStatus('processtesting', row.tssta, row.id)
                 this.addProductHistory(row.id, "测试状态", row.tssta);
             },
+            // //改变软件状态
+            async changeSWSta(row) {
+                await this.changeStatus('processsoftware', row.swsta, row.id)
+                this.addProductHistory(row.id, "软件状态", row.swsta);
+            },
+            // //改变付款状态
+            async changePMSta(row) {
+                await this.changeStatus('processpayment', row.pmsta, row.id)
+                this.addProductHistory(row.id, "付款状态", row.pmsta);
+            },
+            // //改变发货状态
+            async changeDISta(row) {
+                await this.changeStatus('processdeliver', row.dista, row.id)
+                this.addProductHistory(row.id, "发货状态", row.dista);
+            },
+            // //改变开票状态
+            async changeBISta(row) {
+                await this.changeStatus('processbilling', row.bista, row.id)
+                this.addProductHistory(row.id, "开票状态", row.bista);
+            },
             //改变状态通用函数
             async changeStatus(address, newStatus, orderid) {
                 let auth = true;
@@ -780,6 +798,7 @@
                 })
             },
             goback() {
+                this.loading=true
                 this.getProductPage(this.currentPage)
             },
             async remove() {
@@ -835,7 +854,8 @@
         padding-right: 0px !important;
     }
 
-    body {
-        margin: 0;
+    .el-timeline-item {
+        padding-top: 20px;
+        padding-bottom: 0px;
     }
 </style>

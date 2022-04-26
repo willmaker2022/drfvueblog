@@ -62,9 +62,6 @@
         </el-dialog>
     </div>
 </template>
-<!--<script setup>-->
-<!--        import { User, Lock } from  '@element-plus/icons'-->
-<!--</script>-->
 <script>
     import axios from 'axios'
     import {ElMessage} from 'element-plus'

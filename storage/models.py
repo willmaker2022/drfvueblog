@@ -70,7 +70,7 @@ class InOutStorage(models.Model):
         verbose_name="操作方向",
     )
     lCount = models.IntegerField(null=False,default=0,verbose_name='数量')
-    operateday = models.DateTimeField(verbose_name="操作日期")
+    operateday = models.DateTimeField(auto_now=True, verbose_name="操作日期")
     remark = models.TextField(default="", null=True,blank=True, verbose_name="备注")
 
     class Meta:

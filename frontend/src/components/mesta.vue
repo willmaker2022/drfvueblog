@@ -91,7 +91,6 @@
                     this.medata = res.data.results;
                     this.total = res.data.count;
                     this.pageCount = Math.ceil(this.total / 20);
-                    console.log(this.medata)
                 })
             },
             getmedataPage(page){
@@ -129,9 +128,7 @@
                 var data = {}
                 data[item] = val
                 console.log(row)
-                axios.patch('/api/home/processmeprepare/' + row.orderid.id + '/', data).then(res => {
-                    console.log('pathch:',res)
-                })
+                axios.patch('/api/home/processmeprepare/' + row.orderid.id + '/', data)
             },
         },
         // 初始化是时导入出库记录表

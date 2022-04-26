@@ -10,27 +10,27 @@
                         @clear="goback"
                 />
             </el-col>
-            <el-col :span="18"  align="left">
+            <el-col :span="18" align="left">
                 <el-button type='primary' @click="search">搜索</el-button>
-                <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">入库记录</span>
+                <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">机械件状态</span>
             </el-col>
+
         </el-row>
         <!--        数据列表-->
-        <el-table :data="instorage" border style="width: 100%" highlight-current-row @cell-dblclick="editCell">
-            <!--            <el-table-column prop="id" label="编号" width="100"/>-->
-            <el-table-column prop="storage.sId" label="库存代码" width="100"/>
-            <el-table-column prop="storage.sName" label="品名" width="300"/>
-            <el-table-column prop="user.username" label="操作者" width="120"/>
-            <el-table-column prop="lCount" label="数量" width="100"/>
-            <el-table-column prop="remark" label="备注" width="800">
-                    <template v-slot:default="scope">
+        <el-table :data="swdata" border style="width: 100%" highlight-current-row @cell-dblclick="editCell">
+            <el-table-column prop="orderid.orderid" label="订单号" width="100"/>
+            <el-table-column prop="orderid.customer" label="客户名称" width="100"/>
+            <el-table-column prop="startday" label="开始日期" width="180"/>
+            <el-table-column prop="endday" label="交货日期" width="180"/>
+            <el-table-column prop="status" label="状态" width="180" :formatter="formatStatus"/>
+            <el-table-column prop="remark" label="备注">
+                <template v-slot:default="scope">
                             <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
                                       @blur="commitCell(scope.row,scope.row.remark,scope.column)">
                             </el-input>
                             <span v-else>{{scope.row.remark}}</span>
                     </template>
             </el-table-column>
-            <el-table-column prop="operateday" label="入库时间" :formatter="formatUpdated"/>
 
         </el-table>
         <!--页码-->
@@ -49,67 +49,69 @@
 
 <script>
     import axios from 'axios'
-
     export default {
-        name: "instorage",
+        name: "swsta",
         data() {
             return {
-                instorage: [],
+                swdata: [],
                 searchInfo: '',
                 currentPage: 1,
-                total: 0,
-                pageCount: 0,
+                total:0,
+                pageCount:0,
             }
         },
         methods: {
             // 检索，待细化
             async search() {
-                // console.log('search storage clicked');
-                // console.log(this.searchInfo);
-                var res = await axios.get('/api/home/inoutstorage/', {
+                var res = await axios.get('/api/home/processsoftware/', {
                     params: {
-                        direction:'in',
                         search: this.searchInfo
                     }
                 })
                 if (res.data.count !== 0) {
-                    this.instorage = res.data.results
+                    this.swdata = res.data.results
                 } else {
-                    this.instorage = []
+                    this.swdata = []
                 }
             },
-            //修改更新时间为只有日期
-            formatUpdated(row) {
-                return row.operateday.substr(0, 16, 16).replace('T', ' ');
+            //修改订单状态显示
+            formatStatus(row) {
+                if (row.status === 'process') {
+                    return "进行中";
+                }
+                if (row.status === 'finish') {
+                    return "已完成";
+                }
+                if (row.status === 'pending') {
+                    return "未开始";
+                }
             },
-            getInStorage() {
-                axios.get('/api/home/inoutstorage/', {
-                    params: {'direction': "in"}
-                }).then(res => {
-                    this.instorage = res.data.results;
+            getswdata(){
+                axios.get('/api/home/processsoftware/').then(res => {
+                    this.swdata = res.data.results;
                     this.total = res.data.count;
-                    this.pageCount = Math.ceil(this.total / 10);
+                    this.pageCount = Math.ceil(this.total / 20);
                 })
             },
-            getInStoragePage(page) {
-                axios.get('/api/home/inoutstorage/', {
-                    params: {
-                        'direction': "in",
-                        page: page
-                    }
-                }).then(res => {
-                    this.instorage = res.data.results;
+            getswdataPage(page){
+                axios.get('/api/home/processsoftware/',{params:{
+                    page:page
+                    }}).then(res=>{
+                    this.swdata = res.data.results;
                 })
             },
-            CurrentChange(currentPage) {
-                this.getInStoragePage(currentPage);
+            CurrentChange(currentPage){
+                this.getmedataPage(currentPage);
             },
             // 页码变化
             currentChange(page) {
                 this.currentPage = page;
-                this.getInStoragePage(page);
+                this.getswdataPage(page);
             },
-             //双击编辑备注内容
+            goback(){
+                this.getswdataPage(this.currentPage)
+            },
+            //双击编辑备注内容
             editCell(row, col) {
                 if (col.property === 'remark') {
                     row.tbremark = true;
@@ -125,17 +127,12 @@
             patchStorge(item, val, row) {
                 var data = {}
                 data[item] = val
-                axios.patch('/api/home/inoutstorage/' + row.id + '/', data).then(res => {
-                    console.log(res)
-                })
+                axios.patch('/api/home/processsoftware/' + row.orderid.id + '/', data)
             },
-            goback(){
-                this.getInStoragePage(this.currentPage)
-            }
         },
         // 初始化是时导入出库记录表
         created() {
-            this.getInStorage();
+            this.getswdata();
         }
     }
 </script>

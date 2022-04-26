@@ -27,7 +27,7 @@
             </el-col>
         </el-row>
         <!--        数据列表-->
-        <el-table v-loading.fullscreen.lock="storage.length>0 ? false: true"
+        <el-table v-loading.fullscreen.lock="loading"
                   element-loading-text="数据正在加载中..."
                   :data="storage" border style="width: 100%" @row-click="rowClicked"
                   :row-class-name="tableRowClassStatus"
@@ -74,7 +74,6 @@
                     <span v-else>{{scope.row.sName}}</span>
                 </template>
             </el-table-column>
-            >
             <el-table-column prop="sDescription" label="描述" width="300" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.sDescription v-if="scope.row.tbsDescription"
@@ -83,8 +82,8 @@
                     <span v-else>{{scope.row.sDescription}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="sCount" label="库存" width="60" :show-overflow-tooltip="true"/>
-            <el-table-column prop="sUnit" label="单位" width="60" :show-overflow-tooltip="true"/>
+            <el-table-column prop="sCount" label="库存" width="80" :show-overflow-tooltip="true"/>
+            <el-table-column prop="sUnit" label="单位" width="80" :show-overflow-tooltip="true"/>
             <el-table-column prop="ssafeCount" label="安全库存" width="100" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.ssafeCount v-if="scope.row.tbsafeCount"
@@ -225,17 +224,28 @@
                 label-width="300px"
                 class="outForm">
             <el-form-item label="请输入数量" prop="outCount" label-width="100px">
-                <el-input v-model.number="this.outForm.outCount"></el-input>
-                <!--                选择用途,这里主要是客户名称,得到订单号,然后就知道出库的备件是给了哪个订单-->
-                <el-select v-model="selectId" class="m-2" placeholder="选择所属订单" size="large">
-                    <el-option
-                            v-for="item in orderOptions"
-                            :key="item.id"
-                            :label="item.customer"
-                            :value="item.id"
-                    >
-                    </el-option>
-                </el-select>
+                <el-row>
+                    <el-col :span="4">
+                        <el-input v-model.number="this.outForm.outCount"></el-input>
+                    </el-col>
+                    <el-col :span="20">
+                        <!--                选择用途,这里主要是客户名称,得到订单号,然后就知道出库的备件是给了哪个订单-->
+                        <el-select v-model="selectId" class="m-2"
+                                   filterable
+                                   placeholder="选择所属订单" size="large" style="width: 100%">
+                            <el-option
+                                    v-for="item in orders"
+                                    :key="item.id"
+                                    :label="item.customer"
+                                    :value="item.id"
+                            >
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                </el-row>
+            </el-form-item>
+            <el-form-item label="备注" prop="outRemark" label-width="100px">
+                <el-input v-model="this.outForm.outRemark"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -258,6 +268,9 @@
                 class="inForm">
             <el-form-item label="请输入数量" prop="inCount" label-width="100px">
                 <el-input v-model.number="this.inForm.inCount"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="inRemark" label-width="100px">
+                <el-input v-model="this.inForm.inRemark"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -334,7 +347,6 @@
     import inXlsx from "./inXlsx";
     import saveXlsx from "./saveXlsx";
     import SaveXlsx from "./saveXlsx";
-    import products from "./product";
 
     export default {
         name: "storage",
@@ -346,7 +358,7 @@
         },
         data() {
             return {
-                products: products.orders,
+                loading: true,
                 //超出内容tip显示
                 showtip: true,
                 //选中行，分页之后的行怎么选呢
@@ -374,9 +386,11 @@
                 // 出入库数量
                 outForm: {
                     outCount: 1,
+                    outRemark: "",
                 },
                 inForm: {
                     inCount: 1,
+                    inRemark: "",
                 },
                 buyForm: {
                     buyCount: 1,
@@ -520,7 +534,7 @@
                 inStorageDisabled: true,
                 buyStorageDisabled: true,
                 //出库时，订单选择器
-                orderOptions: [],
+                orders: [],
                 selectId: '',
                 //出入库图标
                 timelineconfig: {
@@ -560,6 +574,7 @@
                 } else {
                     this.storage = []
                 }
+                this.loading = false
             },
             // 获取第一页库存
             async getStorage() {
@@ -572,16 +587,19 @@
                     for (var i = 0; i < res.data.results.length; i++) {
                         this.alldata.push(this.storage[i])
                     }
+                    this.loading = false
                 })
             },
             // 获取某一页库存
             async getStoragePage(page) {
+                this.loading = true
                 await axios.get('/api/home/storage/', {
                     params: {
                         page: page
                     }
                 }).then(res => {
                     this.storage = res.data.results;
+                    this.loading = false
                     return this.storage
                 })
             },
@@ -632,32 +650,39 @@
             },
             // 出库
             async outStorage() {
-                const dat = new Date();
-                this.inoutStorgeForm = await this.getRow();
-                this.inoutStorgeForm.sCount -= this.outForm.outCount;
-                axios.put('/api/home/storage/' + this.selectedRow + '/', qs.stringify(this.inoutStorgeForm))
-                    .then(res => {
-                        console.log(res);
-                        this.getStoragePage(this.currentPage);
-                    });
-                this.outStorgeVisible = false;
-                //记录出库条目
                 let auth = true;
                 authorization().then(function (response) {
                     // 检查登录状态
                     if (!response[0]) {
                         alert('登录已过期，请重新登录');
                         auth = false;
+                        this.$router.push({name: 'Login'});
                     }
                 });
                 // 在出入库记录中记录一行，包括借库人，数量，以及归属于哪个订单
                 if (auth) {
+                    const dat = new Date();
+                    this.inoutStorgeForm = await this.getRow();
+                    this.inoutStorgeForm.sCount -= this.outForm.outCount;
+                    if (this.inoutStorgeForm.sCount < 0) {
+                        alert('库存不足');
+                        this.outStorgeVisible = false;
+                        return '库存不足';
+                    }
+                    axios.put('/api/home/storage/' + this.selectedRow + '/', qs.stringify(this.inoutStorgeForm))
+                        .then(res => {
+                            this.getStoragePage(this.currentPage);
+                            console.log(res);
+                        });
+                    this.outStorgeVisible = false;
+                    //记录出库条目
                     axios.post('/api/home/inoutstorage/', {
                             storage_id: this.selectedRow,
                             product_id: this.selectId ? this.selectId : null,
                             lCount: this.outForm.outCount,
                             operateday: dat,
-                            direction: 'out'
+                            direction: 'out',
+                            remark: this.outForm.outRemark
                         },
                         {headers: {Authorization: 'Bearer ' + localStorage.getItem('access.product')}})
                         .then(res => {
@@ -667,28 +692,30 @@
             },
             // 入库
             async inStorage() {
-                const dat = new Date();
-                this.inoutStorgeForm = await this.getRow();
-                this.inoutStorgeForm.sCount += this.inForm.inCount;
-                axios.put('/api/home/storage/' + this.selectedRow + '/', qs.stringify(this.inoutStorgeForm)).then(res => {
-                    console.log(res);
-                    this.getStoragePage(this.currentPage);
-                });
-                this.inStorgeVisible = false;
-                //记录入库条目
                 let auth = true;
                 authorization().then(function (response) {
                     // 检查登录状态
                     if (!response[0]) {
                         alert('登录已过期，请重新登录');
                         auth = false;
+                        this.$router.push({name: 'Login'});
                     }
                 });
                 // 在出入库记录中记录一行，包括借库人，数量，以及归属于哪个订单
                 if (auth) {
+                    const dat = new Date();
+                    this.inoutStorgeForm = await this.getRow();
+                    this.inoutStorgeForm.sCount += this.inForm.inCount;
+                    axios.put('/api/home/storage/' + this.selectedRow + '/', qs.stringify(this.inoutStorgeForm)).then(res => {
+                        this.getStoragePage(this.currentPage);
+                        console.log(res);
+                    });
+                    this.inStorgeVisible = false;
+                    //记录入库条目
                     axios.post('/api/home/inoutstorage/', {
                             storage_id: this.selectedRow, lCount: this.inForm.inCount,
-                            operateday: dat, direction: 'in'
+                            operateday: dat, direction: 'in',
+                            remark: this.inForm.inRemark
                         },
                         {headers: {Authorization: 'Bearer ' + localStorage.getItem('access.product')}})
                         .then(res => {
@@ -698,27 +725,28 @@
             },
             // 采购
             async buyStorage() {
-                const dat = new Date();
-                this.buyStorgeVisible = false;
-                //记录买入条目
                 let auth = true;
                 authorization().then(function (response) {
                     // 检查登录状态
                     if (!response[0]) {
                         alert('登录已过期，请重新登录');
                         auth = false;
+                        this.$router.push({name: 'Login'});
                     }
                 });
                 // 在出入库记录中记录一行，包括操作者，买入数量，备注
                 if (auth) {
+                    const dat = new Date();
+                    this.buyStorgeVisible = false;
+                    //记录买入条目
                     axios.post('/api/home/inoutstorage/', {
                             storage_id: this.selectedRow, lCount: this.buyForm.buyCount,
                             operateday: dat, direction: 'buy', remark: this.buyForm.buyMark
                         },
                         {headers: {Authorization: 'Bearer ' + localStorage.getItem('access.product')}})
                         .then(res => {
-                            console.log(res)
                             this.getStoragePage(this.currentPage);
+                            console.log(res)
                         })
                 }
             },
@@ -731,12 +759,21 @@
                 this.selectedRow = row.id;
             },
             // 因为出库需要记录所属订单,所以这里要获取一下订单信息
-            async getProduct() {
-                let a = {};
+            async getProducts() {
+                let pages;
+                //第一次读取，得到页数。
                 await axios.get('/api/home/product/').then(res => {
-                    a = res.data.results;
+                    pages = Math.ceil(res.data.count / 20);
+                    this.orders = res.data.results;
                 })
-                return a;
+                for (var n = 1; n < pages; n++) {
+                    await axios.get('/api/home/product/', {params: {page: n}})
+                        .then(res => {
+                            for (var index = 0; index < res.data.results.length; index++) {
+                                this.orders.push(res.data.results[index]);
+                            }
+                        })
+                }
             },
             // 查询库存品代码
             async querySid(val) {
@@ -863,7 +900,7 @@
             await this.getStorage();
             await this.getAllStorage();
             this.saveflag = true;
-            this.orderOptions = products.orders.allorder;
+            await this.getProducts();
         },
     }
 
@@ -879,11 +916,11 @@
     }
 
     .el-table >>> th {
-        padding: 5px;
+        padding: 10px;
     }
 
     .el-table >>> td {
-        padding: 5px;
+        padding: 10px;
     }
 
     .el-table >>> .warning-row {

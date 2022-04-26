@@ -6,7 +6,6 @@
                 <el-input
                         v-model="searchInfo"
                         placeholder="输入检索的内容"
-                        :prefix-icon="Search"
                         clearable
                         @clear="goback"
                 />
@@ -81,8 +80,7 @@
             },
             //修改更新时间为只有日期
             formatUpdated(row){
-                let date = new Date(row.operateday);
-                return date.toISOString().substr(0,16,16).replace('T',' ') ;
+                return row.operateday.substr(0,16,16).replace('T',' ') ;
             },
             getBuyStorage(){
                 axios.get('/api/home/inoutstorage/',{params:{direction:'buy'}}).then(res => {

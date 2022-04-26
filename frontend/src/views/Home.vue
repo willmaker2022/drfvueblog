@@ -23,6 +23,7 @@
                         <el-menu-item index="mesta">机械件状态</el-menu-item>
                         <el-menu-item index="assta">装配状态</el-menu-item>
                         <el-menu-item index="tssta">测试状态</el-menu-item>
+                        <el-menu-item index="swsta">软件状态</el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu index="service" popper-class="el-popper">
                         <template #title>
