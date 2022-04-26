@@ -57,8 +57,8 @@
                     </el-timeline>
                 </template>
             </el-table-column>
-            <el-table-column prop="sId" label="库存代码" width="100" :show-overflow-tooltip="true"/>
-            <el-table-column prop="spartNumber" label="物料号" width="100" :show-overflow-tooltip="true">
+            <el-table-column prop="sId" label="库存代码"  :show-overflow-tooltip="true"/>
+            <el-table-column prop="spartNumber" label="物料号"  :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.spartNumber v-if="scope.row.tbspartNumber"
                               @blur="commitCell(scope.row,scope.row.spartNumber,scope.column)">
@@ -66,7 +66,7 @@
                     <span v-else>{{scope.row.spartNumber}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="sName" label="品名" width="180" :show-overflow-tooltip="true">
+            <el-table-column prop="sName" label="品名" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.sName v-if="scope.row.tbsName"
                               @blur="commitCell(scope.row,scope.row.sName,scope.column)">
@@ -74,7 +74,7 @@
                     <span v-else>{{scope.row.sName}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="sDescription" label="描述" width="300" :show-overflow-tooltip="true">
+            <el-table-column prop="sDescription" label="描述" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.sDescription v-if="scope.row.tbsDescription"
                               @blur="commitCell(scope.row,scope.row.sDescription,scope.column)">
@@ -82,9 +82,9 @@
                     <span v-else>{{scope.row.sDescription}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="sCount" label="库存" width="80" :show-overflow-tooltip="true"/>
-            <el-table-column prop="sUnit" label="单位" width="80" :show-overflow-tooltip="true"/>
-            <el-table-column prop="ssafeCount" label="安全库存" width="100" :show-overflow-tooltip="true">
+            <el-table-column prop="sCount" label="库存" :show-overflow-tooltip="true"/>
+            <el-table-column prop="sUnit" label="单位" :show-overflow-tooltip="true"/>
+            <el-table-column prop="ssafeCount" label="安全库存"  :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.ssafeCount v-if="scope.row.tbsafeCount"
                               @blur="commitCell(scope.row,scope.row.ssafeCount,scope.column)">
@@ -92,7 +92,7 @@
                     <span v-else>{{scope.row.ssafeCount}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="sArea" label="存放区域" width="100" :show-overflow-tooltip="true">
+            <el-table-column prop="sArea" label="存放区域"  :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.sArea v-if="scope.row.tbsArea"
                               @blur="commitCell(scope.row,scope.row.sArea,scope.column)">
@@ -100,7 +100,7 @@
                     <span v-else>{{scope.row.sArea}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="sPosition" label="存放库位" width="100" :show-overflow-tooltip="true">
+            <el-table-column prop="sPosition" label="存放库位"  :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.sPosition v-if="scope.row.tbsPosition"
                               @blur="commitCell(scope.row,scope.row.sPosition,scope.column)">
@@ -108,7 +108,7 @@
                     <span v-else>{{scope.row.sPosition}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="updated" :formatter="formatUpdated" label="更新时间" width="140"
+            <el-table-column prop="updated" :formatter="formatUpdated" label="更新时间"
                              :show-overflow-tooltip="true"/>
             <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">

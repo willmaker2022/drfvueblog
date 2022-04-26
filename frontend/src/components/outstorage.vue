@@ -20,12 +20,12 @@
         <el-table :data="outstorage" border style="width: 100%"
                   @cell-dblclick="editCell"
                   highlight-current-row>·
-            <!--            <el-table-column prop="id" label="编号" width="100"/>-->
-            <el-table-column prop="storage.sId" label="库存代码" width="100"/>
-            <el-table-column prop="storage.sName" label="品名" width="300"/>
-            <el-table-column prop="user.username" label="操作者" width="120"/>
-            <el-table-column prop="lCount" label="数量" width="100"/>
-            <el-table-column prop="product.customer" label="客户" width="300"/>
+            <!--            <el-table-column prop="id" label="编号" />-->
+            <el-table-column prop="storage.sId" label="库存代码" />
+            <el-table-column prop="storage.sName" label="品名" />
+            <el-table-column prop="user.username" label="操作者" />
+            <el-table-column prop="lCount" label="数量" />
+            <el-table-column prop="product.customer" label="客户" />
             <el-table-column prop="remark" label="备注" width="500">
                     <template v-slot:default="scope">
                             <el-input v-model=scope.row.remark v-if="scope.row.tbremark"

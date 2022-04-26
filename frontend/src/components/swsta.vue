@@ -18,11 +18,11 @@
         </el-row>
         <!--        数据列表-->
         <el-table :data="swdata" border style="width: 100%" highlight-current-row @cell-dblclick="editCell">
-            <el-table-column prop="orderid.orderid" label="订单号" width="100"/>
-            <el-table-column prop="orderid.customer" label="客户名称" width="100"/>
-            <el-table-column prop="startday" label="开始日期" width="180"/>
-            <el-table-column prop="endday" label="交货日期" width="180"/>
-            <el-table-column prop="status" label="状态" width="180" :formatter="formatStatus"/>
+            <el-table-column prop="orderid.orderid" label="订单号" />
+            <el-table-column prop="orderid.customer" label="客户名称" />
+            <el-table-column prop="startday" label="开始日期" />
+            <el-table-column prop="endday" label="交货日期" />
+            <el-table-column prop="status" label="状态"  :formatter="formatStatus"/>
             <el-table-column prop="remark" label="备注">
                 <template v-slot:default="scope">
                             <el-input v-model=scope.row.remark v-if="scope.row.tbremark"

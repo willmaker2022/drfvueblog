@@ -27,9 +27,9 @@
         </el-row>
         <el-table :data="results" border style="width: 100%"
                   highlight-current-row>
-            <el-table-column prop="batchno" label="编号" width="100"/>
+            <el-table-column prop="batchno" label="编号"/>
             <el-table-column prop="description" label="描述" />
-            <el-table-column prop="created" :formatter="formatUpdated" label="创建日期" width="180"/>
+            <el-table-column prop="created" :formatter="formatUpdated" label="创建日期"/>
         </el-table>
     </el-card>
 </template>

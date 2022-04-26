@@ -48,12 +48,12 @@
                     </el-timeline>
                 </template>
             </el-table-column>
-            <el-table-column prop="orderid" label="订单号" width="120"/>
-            <el-table-column prop="customer" label="用户" width="160"/>
-            <el-table-column prop="productid" label="仪器型号" width="80"/>
-            <el-table-column prop="serial" label="序列号" width="80"/>
-            <el-table-column prop="startday" label="开始日期" width="100"/>
-            <el-table-column prop="endday" label="交货日期" width="100"/>
+            <el-table-column prop="orderid" label="订单号" />
+            <el-table-column prop="customer" label="用户" />
+            <el-table-column prop="productid" label="仪器型号" />
+            <el-table-column prop="serial" label="序列号" />
+            <el-table-column prop="startday" label="开始日期" />
+            <el-table-column prop="endday" label="交货日期" />
 <!--            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>-->
 <!--            <el-table-column prop="status" label="整体状态" width="80">-->
 <!--                <template v-slot:default="scope">-->
@@ -72,7 +72,7 @@
 <!--                    </el-select>-->
 <!--                </template>-->
 <!--            </el-table-column>-->
-            <el-table-column prop="elsta" label="电路板状态" width="80">
+            <el-table-column prop="elsta" label="电路板状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.elsta
                                @change="changeELSta(scope.row)"
@@ -89,7 +89,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="mesta" label="机械件状态" width="80">
+            <el-table-column prop="mesta" label="机械件状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.mesta
                                @change="changeMESta(scope.row)"
@@ -106,7 +106,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="scsta" label="干涉仪状态" width="80">
+            <el-table-column prop="scsta" label="干涉仪状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.scsta
                                @change="changeSCSta(scope.row)"
@@ -123,7 +123,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="assta" label="装配状态" width="80">
+            <el-table-column prop="assta" label="装配状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.assta
                                @change="changeASSta(scope.row)"
@@ -140,7 +140,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="tssta" label="测试状态" width="80">
+            <el-table-column prop="tssta" label="测试状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.tssta
                                @change="changeTSSta(scope.row)"
@@ -157,7 +157,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="swsta" label="软件状态" width="80">
+            <el-table-column prop="swsta" label="软件状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.swsta
                                @change="changeSWSta(scope.row)"
@@ -174,7 +174,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="pmsta" label="付款状态" width="80">
+            <el-table-column prop="pmsta" label="付款状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.pmsta
                                @change="changePMSta(scope.row)"
@@ -191,7 +191,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="dista" label="发货状态" width="80">
+            <el-table-column prop="dista" label="发货状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.dista
                                @change="changeDISta(scope.row)"
@@ -208,7 +208,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column prop="bista" label="开票状态" width="80">
+            <el-table-column prop="bista" label="开票状态" >
                 <template v-slot:default="scope">
                     <el-select v-model=scope.row.bista
                                @change="changeBISta(scope.row)"
@@ -605,7 +605,7 @@
                     //增加主要订单信息
                     await axios
                         .post('/api/home/producthistory/',
-                            {orderid_id: orderid, proitem: item, newcontent: newsta, operateday: dat},
+                            qs.stringify({orderid_id: orderid, proitem: item, newcontent: newsta, operateday: dat}),
                             {headers: {Authorization: 'Bearer ' + localStorage.getItem('access.product')}})
                         .then(res => {
                             console.log(res)

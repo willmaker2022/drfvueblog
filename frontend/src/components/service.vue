@@ -61,10 +61,10 @@
                             </el-card>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="orderid.customer" label="用户名" width="180"/>
-                    <el-table-column prop="orderid.productid" label="型号" width="180"/>
-                    <el-table-column prop="orderid.serial" label="序列号" width="180"/>
-                    <el-table-column prop="style" label="报告类型" :formatter="formateStyle" width="180"/>
+                    <el-table-column prop="orderid.customer" label="用户名" />
+                    <el-table-column prop="orderid.productid" label="型号" />
+                    <el-table-column prop="orderid.serial" label="序列号" />
+                    <el-table-column prop="style" label="报告类型" :formatter="formateStyle" />
                     <el-table-column prop="created" label="日期" :formatter="formatUpdated"/>
                 </el-table>
                 <div class="demo-pagination-block">
