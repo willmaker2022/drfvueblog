@@ -248,5 +248,9 @@
     .el-form-item__content {
         margin-right: 5px;
     }
+    ::v-deep .el-table__body tr.current-row>td {
+        background-color:  #95d475 !important;
+    }
+
 </style>
 

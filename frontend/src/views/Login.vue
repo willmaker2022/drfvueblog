@@ -104,7 +104,7 @@
                             trigger: 'blur',
                         },
                         {
-                            min: 8,
+                            min: 3,
                             max: 20,
                             message: 'Length should be 8 to 20',
                             trigger: 'blur',
@@ -117,7 +117,7 @@
                             trigger: 'blur',
                         },
                         {
-                            min: 8,
+                            min: 3,
                             max: 20,
                             message: 'Length should be 8 to 20',
                             trigger: 'blur',
@@ -133,7 +133,7 @@
                             trigger: 'blur',
                         },
                         {
-                            min: 8,
+                            min: 3,
                             max: 20,
                             message: 'Length should be 8 to 20',
                             trigger: 'blur',

@@ -248,4 +248,8 @@
         height: 600px;
         padding-right: 0px;
     }
+    ::v-deep .el-table__body tr.current-row>td {
+        background-color:  #95d475 !important;
+    }
+
 </style>

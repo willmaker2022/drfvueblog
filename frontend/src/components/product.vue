@@ -591,20 +591,19 @@
                     newsta = "已完成";
                 }
                 let auth = true;
-                ``
                 authorization().then(function (response) {
                     // 检查登录状态
                     if (!response[0]) {
                         alert('登录已过期，请重新登录');
                         auth = false;
+                        this.$router.push({name: 'Login'});
                     }
                 });
                 // 在订单记录中增加一条
                 if (auth) {
                     const dat = new Date();
                     //增加主要订单信息
-                    await axios
-                        .post('/api/home/producthistory/',
+                    await axios.post('/api/home/producthistory/',
                             qs.stringify({orderid_id: orderid, proitem: item, newcontent: newsta, operateday: dat}),
                             {headers: {Authorization: 'Bearer ' + localStorage.getItem('access.product')}})
                         .then(res => {
@@ -620,6 +619,7 @@
                     if (!response[0]) {
                         alert('登录已过期，请重新登录');
                         auth = false;
+                        this.$router.push({name: 'Login'});
                     }
                 });
                 // 在订单记录中增加一条
@@ -678,42 +678,42 @@
             async changeProSta(row) {
                 await this.changeStatus('product', row.status, row.id);
                 //状态更改完成之后，在订单历史中做一条记录
-                this.addProductHistory(row.id, "整体状态", row.status);
+                await this.addProductHistory(row.id, "整体状态", row.status);
             },
             //改变电路板状态
             async changeELSta(row) {
                 await this.changeStatus('processelprepare', row.elsta, row.id);
-                this.addProductHistory(row.id, "电路板状态", row.elsta);
+                await this.addProductHistory(row.id, "电路板状态", row.elsta);
             },
             //改变机械件状态
             async changeMESta(row) {
                 await this.changeStatus('processmeprepare', row.mesta, row.id)
-                this.addProductHistory(row.id, "机械件状态", row.mesta);
+                await this.addProductHistory(row.id, "机械件状态", row.mesta);
             },
             // //改变干涉仪状态
             async changeSCSta(row) {
                 await this.changeStatus('processscprepare', row.scsta, row.id)
-                this.addProductHistory(row.id, "干涉仪状态", row.scsta);
+                await this.addProductHistory(row.id, "干涉仪状态", row.scsta);
             },
             // //改变装配状态
             async changeASSta(row) {
                 await this.changeStatus('processassemble', row.assta, row.id)
-                this.addProductHistory(row.id, "装配状态", row.assta);
+                await this.addProductHistory(row.id, "装配状态", row.assta);
             },
             // //改变测试状态
             async changeTSSta(row) {
                 await this.changeStatus('processtesting', row.tssta, row.id)
-                this.addProductHistory(row.id, "测试状态", row.tssta);
+                await this.addProductHistory(row.id, "测试状态", row.tssta);
             },
             // //改变软件状态
             async changeSWSta(row) {
                 await this.changeStatus('processsoftware', row.swsta, row.id)
-                this.addProductHistory(row.id, "软件状态", row.swsta);
+                await this.addProductHistory(row.id, "软件状态", row.swsta);
             },
             // //改变付款状态
             async changePMSta(row) {
                 await this.changeStatus('processpayment', row.pmsta, row.id)
-                this.addProductHistory(row.id, "付款状态", row.pmsta);
+                await this.addProductHistory(row.id, "付款状态", row.pmsta);
             },
             // //改变发货状态
             async changeDISta(row) {
@@ -723,7 +723,7 @@
             // //改变开票状态
             async changeBISta(row) {
                 await this.changeStatus('processbilling', row.bista, row.id)
-                this.addProductHistory(row.id, "开票状态", row.bista);
+                await this.addProductHistory(row.id, "开票状态", row.bista);
             },
             //改变状态通用函数
             async changeStatus(address, newStatus, orderid) {
@@ -733,6 +733,7 @@
                     if (!response[0]) {
                         alert('登录已过期，请重新登录');
                         auth = false;
+                        this.$router.push({name: 'Login'});
                     }
                 });
                 // 在订单记录中增加一条
@@ -858,4 +859,9 @@
         padding-top: 20px;
         padding-bottom: 0px;
     }
+
+    ::v-deep .el-table__body tr.current-row>td {
+        background-color:  #95d475 !important;
+    }
+
 </style>

@@ -28,7 +28,7 @@
         <el-table :data="results" border style="width: 100%"
                   highlight-current-row>
             <el-table-column prop="batchno" label="编号"/>
-            <el-table-column prop="description" label="描述" />
+            <el-table-column prop="description" label="描述"/>
             <el-table-column prop="created" :formatter="formatUpdated" label="创建日期"/>
         </el-table>
     </el-card>
@@ -128,8 +128,8 @@
                 }
 
             },
-            goback(){
-                this.results='';
+            goback() {
+                this.results = '';
             }
         }
 
@@ -137,5 +137,8 @@
 </script>
 
 <style scoped>
+    ::v-deep .el-table__body tr.current-row > td {
+        background-color: #95d475 !important;
+    }
 
 </style>

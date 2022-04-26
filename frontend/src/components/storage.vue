@@ -57,8 +57,8 @@
                     </el-timeline>
                 </template>
             </el-table-column>
-            <el-table-column prop="sId" label="库存代码"  :show-overflow-tooltip="true"/>
-            <el-table-column prop="spartNumber" label="物料号"  :show-overflow-tooltip="true">
+            <el-table-column prop="sId" label="库存代码" :show-overflow-tooltip="true"/>
+            <el-table-column prop="spartNumber" label="物料号" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.spartNumber v-if="scope.row.tbspartNumber"
                               @blur="commitCell(scope.row,scope.row.spartNumber,scope.column)">
@@ -84,7 +84,7 @@
             </el-table-column>
             <el-table-column prop="sCount" label="库存" :show-overflow-tooltip="true"/>
             <el-table-column prop="sUnit" label="单位" :show-overflow-tooltip="true"/>
-            <el-table-column prop="ssafeCount" label="安全库存"  :show-overflow-tooltip="true">
+            <el-table-column prop="ssafeCount" label="安全库存" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.ssafeCount v-if="scope.row.tbsafeCount"
                               @blur="commitCell(scope.row,scope.row.ssafeCount,scope.column)">
@@ -92,7 +92,7 @@
                     <span v-else>{{scope.row.ssafeCount}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="sArea" label="存放区域"  :show-overflow-tooltip="true">
+            <el-table-column prop="sArea" label="存放区域" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.sArea v-if="scope.row.tbsArea"
                               @blur="commitCell(scope.row,scope.row.sArea,scope.column)">
@@ -100,7 +100,7 @@
                     <span v-else>{{scope.row.sArea}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="sPosition" label="存放库位"  :show-overflow-tooltip="true">
+            <el-table-column prop="sPosition" label="存放库位" :show-overflow-tooltip="true">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.sPosition v-if="scope.row.tbsPosition"
                               @blur="commitCell(scope.row,scope.row.sPosition,scope.column)">
@@ -932,4 +932,9 @@
         display: flex;
         justify-content: flex-start;
     }
+
+    ::v-deep .el-table__body tr.current-row>td {
+        background-color:  #95d475 !important;
+    }
+
 </style>
