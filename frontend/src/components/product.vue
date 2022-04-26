@@ -583,6 +583,7 @@
             },
             //在订单历史中添加一条，此订单历史只增加，不删除，不修改
             async addProductHistory(orderid, item, newcontent) {
+                console.log('orderid',orderid)
                 let newsta;
                 if (newcontent === "process") {
                     newsta = "进行中";
