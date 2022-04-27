@@ -12,7 +12,7 @@
             </el-col>
             <el-col :span="18" align="left">
                 <el-button type='primary' @click="search">搜索</el-button>
-                <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">机械件状态</span>
+                <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">软件状态</span>
             </el-col>
 
         </el-row>
@@ -90,7 +90,7 @@
                 axios.get('/api/home/processsoftware/').then(res => {
                     this.swdata = res.data.results;
                     this.total = res.data.count;
-                    this.pageCount = Math.ceil(this.total / 20);
+                    this.pageCount = Math.ceil(this.total / 16);
                 })
             },
             getswdataPage(page){
@@ -144,5 +144,11 @@
     ::v-deep .el-table__body tr.current-row>td {
         background-color:  #95d475 !important;
     }
+    .el-table >>> th {
+        padding: 10px;
+    }
 
+    .el-table >>> td {
+        padding: 10px;
+    }
 </style>

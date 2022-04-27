@@ -49,7 +49,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="orderid" label="订单号" />
-            <el-table-column prop="customer" label="用户" />
+            <el-table-column prop="customer" label="用户" min-width="130px"/>
             <el-table-column prop="productid" label="仪器型号" />
             <el-table-column prop="serial" label="序列号" />
             <el-table-column prop="startday" label="开始日期" />
@@ -226,7 +226,7 @@
                 </template>
             </el-table-column>
 <!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
-            <el-table-column prop="remark" label="备注" :show-overflow-tooltip="showtip">
+            <el-table-column prop="remark" label="备注" show-overflow-tooltip min-width="130px">
                 <template v-slot:default="scope">
                     <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
                               @blur="commitCell(scope.row,scope.row.remark,scope.column)">
@@ -379,8 +379,6 @@
                 // 删除按钮使能
                 removeDisabled: true,
                 deleteVisible: false,
-                // 显示提示
-                showtip: true,
                 // 增加产品订单时的类型选择
                 oropts: [
                     {
@@ -550,7 +548,7 @@
                 await axios.get('/api/home/product/').then(res => {
                     this.product = res.data.results;
                     this.total = res.data.count;
-                    this.pageCount = Math.ceil(this.total / 20);
+                    this.pageCount = Math.ceil(this.total / 16);
                     this.loading=false;
                 });
             },
@@ -844,11 +842,11 @@
     }
 
     .el-table >>> th {
-        padding: 0;
+        padding: 10px;
     }
 
     .el-table >>> td {
-        padding: 0;
+        padding: 0px;
     }
 
     .el-table ::v-deep(.cell) {
@@ -864,5 +862,6 @@
     ::v-deep .el-table__body tr.current-row>td {
         background-color:  #95d475 !important;
     }
+
 
 </style>

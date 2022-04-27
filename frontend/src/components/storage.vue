@@ -581,7 +581,7 @@
                 await axios.get('/api/home/storage/').then(res => {
                     this.storage = res.data.results;
                     this.total = res.data.count;
-                    this.pageCount = Math.ceil(this.total / 20);
+                    this.pageCount = Math.ceil(this.total / 16);
                     // console.log(this.storage)
                     // return this.storage
                     for (var i = 0; i < res.data.results.length; i++) {
@@ -909,10 +909,6 @@
 <style scoped>
     .el-row {
         margin-bottom: 20px;
-    }
-
-    .el-pagination__total {
-
     }
 
     .el-table >>> th {

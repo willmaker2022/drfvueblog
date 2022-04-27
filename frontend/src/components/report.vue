@@ -251,6 +251,12 @@
     ::v-deep .el-table__body tr.current-row>td {
         background-color:  #95d475 !important;
     }
+    .el-table >>> th {
+        padding: 10px;
+    }
 
+    .el-table >>> td {
+        padding: 10px;
+    }
 </style>
 

@@ -93,7 +93,7 @@
                 axios.get('/api/home/processtesting/').then(res => {
                     this.tsdata = res.data.results;
                     this.total = res.data.count;
-                    this.pageCount = Math.ceil(this.total / 20);
+                    this.pageCount = Math.ceil(this.total / 16);
                 })
             },
             gettsdataPage(page){
@@ -144,6 +144,13 @@
 <style scoped>
     .el-row {
         margin-bottom: 20px;
+    }
+    .el-table >>> th {
+        padding: 10px;
+    }
+
+    .el-table >>> td {
+        padding: 10px;
     }
     ::v-deep .el-table__body tr.current-row>td {
         background-color:  #95d475 !important;

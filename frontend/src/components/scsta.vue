@@ -91,7 +91,7 @@
                 axios.get('/api/home/processscprepare/').then(res => {
                     this.scdata = res.data.results;
                     this.total = res.data.count;
-                    this.pageCount = Math.ceil(this.total / 20);
+                    this.pageCount = Math.ceil(this.total / 16);
                 })
             },
             getscdataPage(page){
@@ -145,5 +145,11 @@
     ::v-deep .el-table__body tr.current-row>td {
         background-color:  #95d475 !important;
     }
+    .el-table >>> th {
+        padding: 10px;
+    }
 
+    .el-table >>> td {
+        padding: 10px;
+    }
 </style>

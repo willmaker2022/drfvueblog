@@ -99,5 +99,5 @@ class ProductHistoryViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['orderid__orderid']
     def perform_create(self, serializer):
-        print(self.request.user)
+        # print(self.request.user)
         serializer.save(user=self.request.user)
