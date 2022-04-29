@@ -14,7 +14,6 @@
                 <el-button type='primary' @click="search">搜索</el-button>
                 <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">购买记录</span>
             </el-col>
-
         </el-row>
         <!--        数据列表-->
         <el-table :data="buystorage" border style="width: 100%" highlight-current-row @cell-dblclick="editCell">

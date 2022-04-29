@@ -1,5 +1,5 @@
 <template>
-    <el-card style="height: 100%; overflow: scroll">
+    <el-card>
         <!--    搜索框和按钮-->
         <el-row :gutter="12" margin-bottom=20px class="row-button">
             <el-col :span="6">

@@ -1,10 +1,10 @@
 <template>
-    <el-container >
+    <el-container :style="defaultHeight">
         <el-aside width="400px">
             <report></report>
         </el-aside>
         <el-main style="padding: 0px; ">
-            <el-card style="height: 100%; overflow: scroll" >
+            <el-card style="height: 100%; overflow: scroll">
                 <!--    搜索框和按钮-->
                 <el-row :gutter="12" margin-bottom=20px>
                     <el-col :span="6">
@@ -61,10 +61,10 @@
                             </el-card>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="orderid.customer" label="用户名" />
-                    <el-table-column prop="orderid.productid" label="型号" />
-                    <el-table-column prop="orderid.serial" label="序列号" />
-                    <el-table-column prop="style" label="报告类型" :formatter="formateStyle" />
+                    <el-table-column prop="orderid.customer" label="用户名"/>
+                    <el-table-column prop="orderid.productid" label="型号"/>
+                    <el-table-column prop="orderid.serial" label="序列号"/>
+                    <el-table-column prop="style" label="报告类型" :formatter="formateStyle"/>
                     <el-table-column prop="created" label="日期" :formatter="formatUpdated"/>
                 </el-table>
                 <div class="demo-pagination-block">
@@ -124,6 +124,10 @@
                 total: 0,
                 pageCount: 0,
                 currentPage: 0,
+                defaultHeight: {
+                    height: ""
+                }
+
             }
         },
         methods: {
@@ -185,9 +189,9 @@
                     let saveUrl = canvas.toDataURL("image/png");
                     let alink = document.createElement('a');
                     alink.href = saveUrl
-                    if(val.orderid !== null){
+                    if (val.orderid !== null) {
                         alink.download = "型号" + val.orderid.productid + '_' + "序列号" + val.orderid.serial + '_' + val.created.substr(0, 10, 10);
-                    }else{
+                    } else {
                         alink.download = val.created.substr(0, 10, 10);
                     }
                     const event = document.createEvent('MouseEvents');
@@ -202,17 +206,24 @@
                 this.selectedRow = row.id;
                 this.removeDisabled = false;
             },
-            async remove(){
-                  axios.delete('/api/home/service/' + this.selectedRow + '/').then(res => {
+            async remove() {
+                axios.delete('/api/home/service/' + this.selectedRow + '/').then(res => {
                         console.log(res);
                         this.getReports()
                     }
                 );
                 this.deleteVisible = false;
+            },
+            //定义方法，获取高度减去头尾
+            getHeight() {
+                this.defaultHeight.height = window.innerHeight - 90 + "px";
             }
+
         },
         created() {
             this.getReports();
+            window.addEventListener("resize", this.getHeight);
+            this.getHeight();
         },
     }
 
@@ -222,14 +233,16 @@
     .el-aside {
         background: #ecf5ff;
     }
+
     .el-container {
         background: #d9ecff;
-        height: 100%;
     }
+
     .el-row {
         margin-bottom: 20px;
         font-size: 20px;
     }
+
     .bottom {
         margin-top: 13px;
         line-height: 12px;
@@ -237,25 +250,33 @@
         justify-content: space-between;
         align-items: center;
     }
+
     .el-image {
         justify-content: center;
         display: flex;
         align-content: center;
     }
+
     >>> .el-image__inner {
         padding: 0px;
         width: auto;
         height: 600px;
         padding-right: 0px;
     }
-    ::v-deep .el-table__body tr.current-row>td {
-        background-color:  #95d475 !important;
+
+    ::v-deep .el-table__body tr.current-row > td {
+        background-color: #95d475 !important;
     }
+
     .el-table >>> th {
         padding: 10px;
     }
 
     .el-table >>> td {
         padding: 10px;
+    }
+
+    #app {
+        height: 100%;
     }
 </style>

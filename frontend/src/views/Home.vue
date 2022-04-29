@@ -1,7 +1,7 @@
 <!--  frontend/src/views/Home.vue  -->
 
 <template>
-    <el-container class="home_content">
+    <el-container>
         <el-header>
             <el-col :span="4" class="header_left">
                 <img class="myimg" :src="logourl">&nbsp;
@@ -118,15 +118,15 @@
                 this.hasLogin = false;
                 this.$router.push({name: 'Login'})
             }
-        }
+        },
     }
 </script>
 
 <style scoped="scoped">
-    .home_content {
-        background: antiquewhite;
-        height: 100%;
-    }
+    /*.home_content {*/
+    /*    background: antiquewhite;*/
+    /*    height: 100%;*/
+    /*}*/
 
     .el-header {
         background: #95d475;

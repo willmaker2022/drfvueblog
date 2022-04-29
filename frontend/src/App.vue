@@ -44,8 +44,8 @@
         min-width: 1000px;
     }
 
-    html, body, #app {
-        height: 100%;
-        width: 100%;
-    }
+    /*html, body, #app {*/
+    /*    height: 100%;*/
+    /*    width: 100%;*/
+    /*}*/
 </style>
