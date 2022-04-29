@@ -1,7 +1,7 @@
 <!--  frontend/src/views/Home.vue  -->
 
 <template>
-    <el-container>
+    <el-container >
         <el-header>
             <el-col :span="4" class="header_left">
                 <img class="myimg" :src="logourl">&nbsp;
@@ -50,7 +50,7 @@
                 </div>
             </el-col>
         </el-header>
-        <el-main>
+        <el-main style="height: 90vh">
             <router-view/>
         </el-main>
     </el-container>
@@ -140,7 +140,7 @@
     }
 
     .el-main {
-        height: 100%;
+        /*height: 100%;*/
         background: rgb(234, 237, 241);
         padding: 0px;
     }
@@ -154,7 +154,6 @@
     }
 
     .sub-menu-font {
-
         font-size: 14px;
     }
 
@@ -178,4 +177,9 @@
     .el-card{
         height: 100%;
     }
+
+    .el-container{
+        height: 100%;
+    }
+
 </style>

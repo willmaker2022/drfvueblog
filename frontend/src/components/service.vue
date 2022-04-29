@@ -1,6 +1,6 @@
 <template>
-    <el-container :style="defaultHeight">
-        <el-aside width="400px">
+    <el-container style="height: 100%">
+        <el-aside width="400px" >
             <report></report>
         </el-aside>
         <el-main style="padding: 0px; ">
@@ -124,10 +124,6 @@
                 total: 0,
                 pageCount: 0,
                 currentPage: 0,
-                defaultHeight: {
-                    height: ""
-                }
-
             }
         },
         methods: {
@@ -222,8 +218,6 @@
         },
         created() {
             this.getReports();
-            window.addEventListener("resize", this.getHeight);
-            this.getHeight();
         },
     }
 
