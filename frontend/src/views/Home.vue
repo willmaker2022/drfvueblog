@@ -1,7 +1,7 @@
 <!--  frontend/src/views/Home.vue  -->
 
 <template>
-    <el-container >
+    <el-container :style="{ height: clientHeight + 'px' }">
         <el-header>
             <el-col :span="4" class="header_left">
                 <img class="myimg" :src="logourl">&nbsp;
@@ -15,7 +15,7 @@
                         mode="horizontal">
                     <el-sub-menu index="product" popper-class="el-popper">
                         <template #title>
-                            <span class="sub-menu-font" >生产计划</span>
+                            <span class="sub-menu-font">生产计划</span>
                         </template>
                         <el-menu-item index="product">订单管理</el-menu-item>
                         <el-menu-item index="elsta">电路板状态</el-menu-item>
@@ -59,13 +59,13 @@
 <script>
     import axios from 'axios'
 
-
     export default {
         data() {
             return {
                 logourl: require('@/assets/logo1.png'),
                 hasLogin: true,
                 username: '',
+                clientHeight: document.body.clientHeight
             }
         },
         mounted() {
@@ -111,6 +111,12 @@
                 that.hasLogin = false;
                 this.$router.push({name: 'Login'})
             }
+            window.onresize = () => {
+                return (() => {
+                    window.screenHeight = document.body.clientHeight
+                    that.clientHeight = window.screenHeight
+                })()
+            }
         },
         methods: {
             loginOut() {
@@ -119,6 +125,26 @@
                 this.$router.push({name: 'Login'})
             }
         },
+        // mounted() {
+        //     const that = this
+        //
+        // },
+        watch: {
+            clientHeight(val) {
+                // 为了避免频繁触发resize函数导致页面卡顿，使用定时器
+                if (!this.timer) {
+                    // 一旦监听到的screenWidth值改变，就将其重新赋给data里的screenWidth
+                    this.clientHeight = val
+                    this.timer = true
+                    let that = this
+                    setTimeout(function () {
+                        // 打印screenWidth变化的值
+                        console.log(that.clientHeight)
+                        that.timer = false
+                    }, 400)
+                }
+            }
+        }
     }
 </script>
 
@@ -174,11 +200,11 @@
         border-radius: 4px;
     }
 
-    .el-card{
+    .el-card {
         height: 100%;
     }
 
-    .el-container{
+    .el-container {
         height: 100%;
     }
 
