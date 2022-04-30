@@ -1,8 +1,7 @@
 <template>
-
-    <el-card>
-        <!--    搜索框和按钮-->
-        <el-row :gutter="12" margin-bottom=20px>
+    <el-container style="background: white">
+        <el-header style="padding-bottom: 0px;padding-top: 20px; padding-left: 20px">
+            <!--    搜索框和按钮-->
             <el-col :span="6">
                 <el-input
                         v-model="searchInfo"
@@ -15,50 +14,52 @@
                 <el-button type='primary' @click="search">搜索</el-button>
                 <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">测试状态</span>
             </el-col>
-
-        </el-row>
-        <!--        数据列表-->
-        <el-table :data="tsdata" border style="width: 100%" highlight-current-row @cell-dblclick="editCell">
-            <el-table-column prop="orderid.orderid" label="订单号" />
-            <el-table-column prop="orderid.customer" label="客户名称" />
-            <el-table-column prop="startday" label="开始日期" />
-            <el-table-column prop="endday" label="交货日期" />
-            <el-table-column prop="status" label="状态"  :formatter="formatStatus"/>
-            <el-table-column prop="remark" label="备注">
-                <template v-slot:default="scope">
-                            <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
-                                      @blur="commitCell(scope.row,scope.row.remark,scope.column)">
-                            </el-input>
-                            <span v-else>{{scope.row.remark}}</span>
+        </el-header>
+        <el-main>
+            <!--        数据列表-->
+            <el-table :data="tsdata" border style="width: 100%" highlight-current-row @cell-dblclick="editCell">
+                <el-table-column prop="orderid.orderid" label="订单号"/>
+                <el-table-column prop="orderid.customer" label="客户名称"/>
+                <el-table-column prop="startday" label="开始日期"/>
+                <el-table-column prop="endday" label="交货日期"/>
+                <el-table-column prop="status" label="状态" :formatter="formatStatus"/>
+                <el-table-column prop="remark" label="备注">
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
+                                  @blur="commitCell(scope.row,scope.row.remark,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.remark}}</span>
                     </template>
-            </el-table-column>
+                </el-table-column>
 
-        </el-table>
-        <!--页码-->
-        <div class="demo-pagination-block">
-            <el-pagination
-                    v-model:currentPage="currentPage"
-                    v-model:page-count="pageCount"
-                    layout="total, prev, pager, next"
-                    v-model:total="total"
-                    @current-change="currentChange"
-            >
-            </el-pagination>
-        </div>
-    </el-card>
+            </el-table>
+            <!--页码-->
+            <div class="demo-pagination-block">
+                <el-pagination
+                        v-model:currentPage="currentPage"
+                        v-model:page-count="pageCount"
+                        layout="total, prev, pager, next"
+                        v-model:total="total"
+                        @current-change="currentChange"
+                >
+                </el-pagination>
+            </div>
+        </el-main>
+    </el-container>
 </template>
 
 <script>
     import axios from 'axios'
+
     export default {
-        name: "assta",
+        name: "tssta",
         data() {
             return {
                 tsdata: [],
                 searchInfo: '',
                 currentPage: 1,
-                total:0,
-                pageCount:0,
+                total: 0,
+                pageCount: 0,
             }
         },
         methods: {
@@ -89,21 +90,23 @@
                     return "未开始";
                 }
             },
-            gettsdata(){
+            gettsdata() {
                 axios.get('/api/home/processtesting/').then(res => {
                     this.tsdata = res.data.results;
                     this.total = res.data.count;
                     this.pageCount = Math.ceil(this.total / 16);
                 })
             },
-            gettsdataPage(page){
-                axios.get('/api/home/processtesting/',{params:{
-                    page:page
-                    }}).then(res=>{
+            gettsdataPage(page) {
+                axios.get('/api/home/processtesting/', {
+                    params: {
+                        page: page
+                    }
+                }).then(res => {
                     this.tsdata = res.data.results;
                 })
             },
-            CurrentChange(currentPage){
+            CurrentChange(currentPage) {
                 this.gettsdataPage(currentPage);
             },
             // 页码变化
@@ -111,7 +114,7 @@
                 this.currentPage = page;
                 this.gettsdataPage(page);
             },
-            goback(){
+            goback() {
                 this.gettsdataPage(this.currentPage)
             },
             //双击编辑备注内容
@@ -145,6 +148,7 @@
     .el-row {
         margin-bottom: 20px;
     }
+
     .el-table >>> th {
         padding: 10px;
     }
@@ -152,8 +156,15 @@
     .el-table >>> td {
         padding: 10px;
     }
-    ::v-deep .el-table__body tr.current-row>td {
-        background-color:  #95d475 !important;
+
+    ::v-deep .el-table__body tr.current-row > td {
+        background-color: #95d475 !important;
     }
 
+    .el-header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        vertical-align: middle;
+    }
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <el-card>
-        <!--    搜索框和按钮-->
-        <el-row :gutter="12" margin-bottom=20px>
+    <el-container style="background: white">
+        <el-header style="padding-bottom: 0px;padding-top: 20px; padding-left: 20px">
+            <!--    搜索框和按钮-->
             <el-col :span="6">
                 <el-input
                         v-model="searchInfo"
@@ -10,50 +10,53 @@
                         @clear="goback"
                 />
             </el-col>
-            <el-col :span="18"  align="left">
+            <el-col :span="18" align="left">
                 <el-button type='primary' @click="search">搜索</el-button>
                 <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">出库记录</span>
             </el-col>
+        </el-header>
+        <el-main>
 
-        </el-row>
-        <!--        数据列表-->
-        <el-table :data="outstorage" border style="width: 100%"
-                  @cell-dblclick="editCell"
-                  highlight-current-row>·
-            <!--            <el-table-column prop="id" label="编号" />-->
-            <el-table-column prop="storage.sId" label="库存代码" />
-            <el-table-column prop="storage.sName" label="品名" />
-            <el-table-column prop="user.username" label="操作者" />
-            <el-table-column prop="lCount" label="数量" />
-            <el-table-column prop="product.customer" label="客户" />
-            <el-table-column prop="remark" label="备注" width="500">
+            <!--        数据列表-->
+            <el-table :data="outstorage" border style="width: 100%"
+                      @cell-dblclick="editCell"
+                      highlight-current-row>·
+                <!--            <el-table-column prop="id" label="编号" />-->
+                <el-table-column prop="storage.sId" label="库存代码"/>
+                <el-table-column prop="storage.sName" label="品名"/>
+                <el-table-column prop="user.username" label="操作者"/>
+                <el-table-column prop="lCount" label="数量"/>
+                <el-table-column prop="product.customer" label="客户"/>
+                <el-table-column prop="remark" label="备注" width="500">
                     <template v-slot:default="scope">
-                            <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
-                                      @blur="commitCell(scope.row,scope.row.remark,scope.column)">
-                            </el-input>
-                            <span v-else>{{scope.row.remark}}</span>
+                        <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
+                                  @blur="commitCell(scope.row,scope.row.remark,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.remark}}</span>
                     </template>
-            </el-table-column>
+                </el-table-column>
 
-            <el-table-column prop="operateday" label="出库时间" :formatter="formatUpdated"/>
+                <el-table-column prop="operateday" label="出库时间" :formatter="formatUpdated"/>
 
-        </el-table>
-        <!--页码-->
-        <div class="demo-pagination-block">
-            <el-pagination
-                    v-model:currentPage="currentPage"
-                    v-model:page-count="pageCount"
-                    layout="total, prev, pager, next"
-                    v-model:total="total"
-                    @current-change="currentChange"
-            >
-            </el-pagination>
-        </div>
-    </el-card>
+            </el-table>
+            <!--页码-->
+            <div class="demo-pagination-block">
+                <el-pagination
+                        v-model:currentPage="currentPage"
+                        v-model:page-count="pageCount"
+                        layout="total, prev, pager, next"
+                        v-model:total="total"
+                        @current-change="currentChange"
+                >
+                </el-pagination>
+            </div>
+        </el-main>
+    </el-container>
 </template>
 
 <script>
     import axios from 'axios'
+
     export default {
         name: "outstorage",
         data() {
@@ -61,8 +64,8 @@
                 outstorage: [],
                 searchInfo: '',
                 currentPage: 1,
-                total:0,
-                pageCount:0,
+                total: 0,
+                pageCount: 0,
             }
         },
         methods: {
@@ -72,7 +75,7 @@
                 // console.log(this.searchInfo);
                 var res = await axios.get('/api/home/inoutstorage/', {
                     params: {
-                        direction:'out',
+                        direction: 'out',
                         search: this.searchInfo
                     }
                 })
@@ -83,25 +86,27 @@
                 }
             },
             //修改更新时间为只有日期
-            formatUpdated(row){
-                return row.operateday.substr(0,16,16).replace('T',' ') ;
+            formatUpdated(row) {
+                return row.operateday.substr(0, 16, 16).replace('T', ' ');
             },
-            getOutStorage(){
-                axios.get('/api/home/inoutstorage/',{params:{direction:'out'}}).then(res => {
+            getOutStorage() {
+                axios.get('/api/home/inoutstorage/', {params: {direction: 'out'}}).then(res => {
                     this.outstorage = res.data.results;
                     this.total = res.data.count;
                     this.pageCount = Math.ceil(this.total / 16);
                 })
             },
-            getOutStoragePage(page){
-                axios.get('/api/home/inoutstorage/',{params:{
-                    direction:'out',
-                    page:page
-                    }}).then(res=>{
+            getOutStoragePage(page) {
+                axios.get('/api/home/inoutstorage/', {
+                    params: {
+                        direction: 'out',
+                        page: page
+                    }
+                }).then(res => {
                     this.outstorage = res.data.results;
                 })
             },
-            CurrentChange(currentPage){
+            CurrentChange(currentPage) {
                 this.getOutStoragePage(currentPage);
             },
             // 页码变化
@@ -129,7 +134,7 @@
                     console.log(res)
                 })
             },
-            goback(){
+            goback() {
                 this.getOutStoragePage(this.currentPage)
             }
         },
@@ -144,14 +149,23 @@
     .el-row {
         margin-bottom: 20px;
     }
-    ::v-deep .el-table__body tr.current-row>td {
-        background-color:  #95d475 !important;
+
+    ::v-deep .el-table__body tr.current-row > td {
+        background-color: #95d475 !important;
     }
+
     .el-table >>> th {
         padding: 10px;
     }
 
     .el-table >>> td {
         padding: 10px;
+    }
+
+    .el-header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        vertical-align: middle;
     }
 </style>

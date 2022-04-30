@@ -18,10 +18,10 @@ class StorageInfoModelSerializer(serializers.HyperlinkedModelSerializer):
         ret=[]
         for obj in query_set:
             if (obj.product is None) :
-                    ret.append({'lcount':obj.lCount, 'user': obj.user.username, 'operateday': obj.operateday+ datetime.timedelta(hours=8), 'remark':obj.remark,
+                    ret.append({'lcount':obj.lCount, 'user': obj.user.username, 'operateday': obj.operateday, 'remark':obj.remark,
                              'customer': "", 'direction': obj.direction})
             else:
-                    ret.append({'lcount': obj.lCount, 'user': obj.user.username, 'operateday': obj.operateday+ datetime.timedelta(hours=8), 'remark': obj.remark,
+                    ret.append({'lcount': obj.lCount, 'user': obj.user.username, 'operateday': obj.operateday, 'remark': obj.remark,
                          'customer': obj.product.customer,'direction': obj.direction })
         return ret
 

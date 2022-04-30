@@ -1,7 +1,7 @@
 <!--  frontend/src/views/Home.vue  -->
 
 <template>
-    <el-container :style="{ height: clientHeight + 'px' }">
+    <el-container :style="{ height: clientHeight +'px' }">
         <el-header>
             <el-col :span="4" class="header_left">
                 <img class="myimg" :src="logourl">&nbsp;
@@ -50,7 +50,7 @@
                 </div>
             </el-col>
         </el-header>
-        <el-main style="height: 90vh">
+        <el-main>
             <router-view/>
         </el-main>
     </el-container>
@@ -200,9 +200,9 @@
         border-radius: 4px;
     }
 
-    .el-card {
-        height: 100%;
-    }
+    /*.el-card {*/
+    /*    height: 100%;*/
+    /*}*/
 
     .el-container {
         height: 100%;

@@ -228,9 +228,9 @@
         background: #ecf5ff;
     }
 
-    .el-container {
-        background: #d9ecff;
-    }
+    /*.el-container {*/
+    /*    background: #d9ecff;*/
+    /*}*/
 
     .el-row {
         margin-bottom: 20px;
@@ -268,9 +268,5 @@
 
     .el-table >>> td {
         padding: 10px;
-    }
-
-    #app {
-        height: 100%;
     }
 </style>
