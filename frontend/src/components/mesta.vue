@@ -20,6 +20,7 @@
             <el-table :data="medata" border style="width: 100%" highlight-current-row @cell-dblclick="editCell">
                 <el-table-column prop="orderid.orderid" label="订单号"/>
                 <el-table-column prop="orderid.customer" label="客户名称"/>
+                <el-table-column prop="orderid.serial" label="序列号"/>
                 <el-table-column prop="startday" label="开始日期"/>
                 <el-table-column prop="endday" label="交货日期"/>
                 <el-table-column prop="status" label="状态" :formatter="formatStatus"/>

@@ -3,7 +3,7 @@ import datetime
 from rest_framework import serializers
 from .models import Productplan, ProcessTesting, ProcessScPrepare, \
     ProcessMePrepare, ProcessElPrepare, ProcessAssemble, ProductHistory, \
-    ProcessBilling, ProcessDeliver, ProcessPayment, ProcessSoftware
+    ProcessBilling, ProcessDeliver, ProcessPayment, ProcessSoftware, ProcessDueing
 from user_info.serializers import UserDescSerializer
 
 
@@ -29,6 +29,8 @@ class ProductplanSerializer(serializers.HyperlinkedModelSerializer):
     dista = serializers.SerializerMethodField()
     # 获取开票状态
     bista = serializers.SerializerMethodField()
+    # 获取尾款状态
+    duesta = serializers.SerializerMethodField()
     # 获取订单历史状态
     producthistory = serializers.SerializerMethodField()
 
@@ -111,6 +113,15 @@ class ProductplanSerializer(serializers.HyperlinkedModelSerializer):
     def get_bista(self, productplan_obj):
         try:
             status = productplan_obj.probi
+        except :
+            status = None
+        if status:
+            return status.status
+        return 'pending'
+
+    def get_duesta(self, productplan_obj):
+        try:
+            status = productplan_obj.produe
         except :
             status = None
         if status:
@@ -220,6 +231,17 @@ class ProcessBillingSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ProcessBilling
+        fields = '__all__'
+
+
+# 尾款
+class ProcessDueingSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    orderid = ProductplanSerializer(read_only=True)
+    orderid_id = serializers.IntegerField(write_only=True, allow_null=False, required=True)
+
+    class Meta:
+        model = ProcessDueing
         fields = '__all__'
 
 

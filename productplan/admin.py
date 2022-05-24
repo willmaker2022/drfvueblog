@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Productplan, ProcessAssemble,ProcessElPrepare,ProcessMePrepare,\
-    ProcessScPrepare,ProcessTesting,ProductHistory,ProcessBilling,ProcessDeliver,\
-    ProcessPayment,ProcessSoftware
+from .models import Productplan, ProcessAssemble, ProcessElPrepare, ProcessMePrepare, \
+    ProcessScPrepare, ProcessTesting, ProductHistory, ProcessBilling, ProcessDeliver, \
+    ProcessPayment, ProcessSoftware, ProcessDueing
 
 # Register your models here.
 admin.site.register(Productplan)
@@ -15,3 +15,4 @@ admin.site.register(ProcessSoftware)
 admin.site.register(ProcessDeliver)
 admin.site.register(ProcessPayment)
 admin.site.register(ProcessBilling)
+admin.site.register(ProcessDueing)

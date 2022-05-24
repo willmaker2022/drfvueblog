@@ -49,30 +49,20 @@
                         </el-timeline>
                     </template>
                 </el-table-column>
-                <el-table-column prop="orderid" label="订单号" show-overflow-tooltip/>
+                <el-table-column prop="orderid" label="订单号" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-link v-if="scope.row.conffile" :href="scope.row.conffile" target="_blank" class="buttonText"
+                                 type="primary" :underline="false">
+                            {{scope.row.orderid}}
+                        </el-link>
+                        <span v-else> {{scope.row.orderid}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="customer" label="用户" min-width="130px" show-overflow-tooltip/>
                 <el-table-column prop="productid" label="仪器型号" show-overflow-tooltip/>
                 <el-table-column prop="serial" label="序列号" show-overflow-tooltip/>
-                <el-table-column prop="startday" label="开始日期" show-overflow-tooltip/>
+                <el-table-column prop="startday" label="入单日期" show-overflow-tooltip/>
                 <el-table-column prop="endday" label="交货日期" show-overflow-tooltip/>
-                <!--            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>-->
-                <!--            <el-table-column prop="status" label="整体状态" width="80">-->
-                <!--                <template v-slot:default="scope">-->
-                <!--                    <el-select v-model=scope.row.status-->
-                <!--                               @change="changeProSta(scope.row)"-->
-                <!--                               :class="scope.row.status"-->
-                <!--                    >-->
-                <!--                        <el-option-->
-                <!--                                v-for="item in staopts"-->
-                <!--                                :key="item.value"-->
-                <!--                                :label="item.label"-->
-                <!--                                :value="item.value"-->
-                <!--                                :disabled=getDisabledInfo(scope.row.status,item.value)-->
-                <!--                        >-->
-                <!--                        </el-option>-->
-                <!--                    </el-select>-->
-                <!--                </template>-->
-                <!--            </el-table-column>-->
                 <el-table-column prop="elsta" label="电路板状态">
                     <template v-slot:default="scope">
                         <el-select v-model=scope.row.elsta
@@ -175,7 +165,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="pmsta" label="付款状态" show-overflow-tooltip>
+                <el-table-column prop="pmsta" label="货前款状态" show-overflow-tooltip>
                     <template v-slot:default="scope">
                         <el-select v-model=scope.row.pmsta
                                    @change="changePMSta(scope.row)"
@@ -226,6 +216,23 @@
                         </el-select>
                     </template>
                 </el-table-column>
+                <el-table-column prop="duesta" label="尾款状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.duesta
+                                   @change="changeDUESta(scope.row)"
+                                   :class="scope.row.duesta"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.duesta,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
                 <!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
                 <el-table-column prop="remark" label="备注" show-overflow-tooltip min-width="130px">
                     <template v-slot:default="scope">
@@ -236,7 +243,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-
+            <!--            页脚-->
             <div class="demo-pagination-block">
                 <el-pagination
                         v-model:currentPage="currentPage"
@@ -278,7 +285,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="订单类型" prop="category" label-width="100px">
+                            <el-form-item label="订单类型" prop="category" label-width="100px" align="left">
                                 <el-select v-model=addProductForm.category placeholder="选择订单类型">
                                     <el-option
                                             v-for="item in oropts"
@@ -298,7 +305,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="交货日期" prop="endday" label-width="100px">
+                            <el-form-item label="交货日期" prop="endday" label-width="100px" align="left">
                                 <el-date-picker v-model="addProductForm.endday" type="date"
                                                 value-format="YYYY-MM-DD"
                                                 placeholder="Pick a day">
@@ -307,10 +314,20 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
-
                         <el-col :span="24">
                             <el-form-item label="备注" prop="remark" label-width="100px">
                                 <el-input v-model="addProductForm.remark"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="24">
+                            <el-form-item prop="remark" label-width="100px" align="left">
+                                <el-upload :on-change="handleUpload"
+                                           action="#"
+                                           :auto-upload="false">
+                                    <el-button type="primary">请上传配置单</el-button>
+                                </el-upload>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -344,37 +361,13 @@
     import qs from "qs";
     import authorization from "../../utils/authorization";
     import {BIconAlarm} from 'bootstrap-icons-vue'
-    // 所有订单
-    // const orders = {
-    //     product: [],
-    //     allorder: [],
-    //     pages: 0,
-    // }
-    // const products = async () => {
-    //     //第一次读取，得到页数。
-    //     await axios.get('/api/home/product/').then(res => {
-    //         orders.pages = Math.ceil(res.data.count / 20);
-    //         orders.allorder = res.data.results;
-    //         orders.product = res.data.results;
-    //     })
-    //     for (var n = 1; n < orders.pages; n++) {
-    //         await axios.get('/api/home/product/', {params: {page: n}})
-    //             .then(res => {
-    //                 for (var index = 0; index < res.data.results.length; index++) {
-    //                     orders.allorder.push(res.data.results[index]);
-    //                 }
-    //             })
-    //     }
-    //     return orders.allorder;
-    // }
+
     export default {
         name: "productPlan",
         components: {
             Search,
             BIconAlarm,
         },
-        // orders,
-        // products: products(),
         data() {
             return {
                 loading: true,
@@ -426,8 +419,10 @@
                     customer: "",
                     productid: "",
                     serial: "",
+                    startday: "",
                     endday: "",
-                    category: "",
+                    category: "std",
+                    conffile: "",
                 },
                 addStaForm: {
                     order_id: "",
@@ -627,50 +622,69 @@
                 if (auth) {
                     const dat = new Date();
                     const stday = dat.toISOString().substr(0, 10, 10);
-                    //增加主要订单信息
-                    await axios.post('/api/home/product/', qs.stringify(this.addProductForm)).then(res => {
+                    let param = new FormData()
+                    param.append('orderid', this.addProductForm.orderid)
+                    param.append('customer', this.addProductForm.customer)
+                    param.append('productid', this.addProductForm.productid)
+                    param.append('serial', this.addProductForm.serial)
+                    param.append('startday', stday)
+                    param.append('endday', this.addProductForm.endday)
+                    param.append('category', this.addProductForm.category)
+                    param.append('conffile', this.addProductForm.conffile)
+                    await axios.post('/api/home/product/', param,
+                        {
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('access.product'),
+                            }
+                        }).then(res => {
                         this.addStaForm.order_id = res.data.id;
                         this.getProduct();
                     })
-                    //增加电路板条目信息
-                    axios.post('/api/home/processelprepare/', {
-                        orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
-                        startday: stday,
-                    }).then(res => {
-                        console.log(res);
-                    })
-                    //增加机械件条目信息
-                    axios.post('/api/home/processmeprepare/', {
-                        orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
-                        startday: stday,
-                    }).then(res => {
-                        console.log(res);
-                    })
-                    //增加干涉仪条目信息
-                    axios.post('/api/home/processscprepare/', {
-                        orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
-                        startday: stday,
-                    }).then(res => {
-                        console.log(res);
-                    })
-                    //增加装配条目信息
-                    axios.post('/api/home/processassemble/', {
-                        orderid_id: this.addStaForm.order_id,
-                        status: this.addStaForm.status
-                    }).then(res => {
-                        console.log(res);
-                    })
-                    //增加测试条目信息
-                    axios.post('/api/home/processtesting/', {
-                        orderid_id: this.addStaForm.order_id,
-                        status: this.addStaForm.status
-                    }).then(res => {
-                        console.log(res);
-                    })
+                    // this.addProductForm.startday = stday;
+                    // //增加主要订单信息
+                    // await axios.post('/api/home/product/', qs.stringify(this.addProductForm)).then(res => {
+                    //     this.addStaForm.order_id = res.data.id;
+                    //     this.getProduct();
+                    // })
+                    // //增加电路板条目信息
+                    // axios.post('/api/home/processelprepare/', {
+                    //     orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
+                    //     startday: stday,
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
+                    // //增加机械件条目信息
+                    // axios.post('/api/home/processmeprepare/', {
+                    //     orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
+                    //     startday: stday,
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
+                    // //增加干涉仪条目信息
+                    // axios.post('/api/home/processscprepare/', {
+                    //     orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
+                    //     startday: stday,
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
+                    // //增加装配条目信息
+                    // axios.post('/api/home/processassemble/', {
+                    //     orderid_id: this.addStaForm.order_id,
+                    //     status: this.addStaForm.status
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
+                    // //增加测试条目信息
+                    // axios.post('/api/home/processtesting/', {
+                    //     orderid_id: this.addStaForm.order_id,
+                    //     status: this.addStaForm.status
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
                 }
                 this.addProductVisible = false;
             },
-            // 选择条目，，可以修改该条目信息
+            // 选择条目，可以修改该条目信息
             rowClicked(row) {
                 this.selectedRow = row.id;
                 this.removeDisabled = false;
@@ -725,6 +739,11 @@
             async changeBISta(row) {
                 await this.changeStatus('processbilling', row.bista, row.id)
                 await this.addProductHistory(row.id, "开票状态", row.bista);
+            },
+            // //改变尾款状态
+            async changeDUESta(row) {
+                await this.changeStatus('processdueing', row.duesta, row.id)
+                await this.addProductHistory(row.id, "尾款状态", row.duesta);
             },
             //改变状态通用函数
             async changeStatus(address, newStatus, orderid) {
@@ -810,6 +829,10 @@
                     }
                 );
                 this.deleteVisible = false;
+            },
+            //上传配置单
+            handleUpload(file) {
+                this.addProductForm.conffile = file.raw;
             }
         },
         created() {
