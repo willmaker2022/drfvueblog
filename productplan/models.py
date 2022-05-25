@@ -45,9 +45,9 @@ class Productplan(CommonInfo):
         verbose_name="订单类型",
     )
     # 型号
-    productid = models.CharField(max_length=10, verbose_name="产品型号")
+    productid = models.CharField(max_length=20, verbose_name="产品型号")
     # 序列号
-    serial = models.CharField(max_length=10, verbose_name="序列号")
+    serial = models.CharField(max_length=20, verbose_name="序列号")
     # 用户
     customer = models.CharField(max_length=20, verbose_name="用户")
     # 配置单
