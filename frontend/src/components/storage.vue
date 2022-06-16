@@ -1,7 +1,7 @@
 <template>
-    <el-card>
-        <!--    搜索框和按钮-->
-        <el-row margin-bottom=20px :gutter="12" class="row-button">
+    <el-container style="background: white">
+        <el-header style="padding-bottom: 0px;padding-top: 20px; padding-left: 20px">
+            <!--    搜索框和按钮-->
             <el-col :span="6">
                 <el-input
                         v-model="searchInfo"
@@ -25,318 +25,321 @@
                 <el-button type='primary' @click="adminStorageVisible=true">管理</el-button>
                 <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">库存表</span>
             </el-col>
-        </el-row>
-        <!--        数据列表-->
-        <el-table v-loading.fullscreen.lock="loading"
-                  element-loading-text="数据正在加载中..."
-                  :data="storage" border style="width: 100%" @row-click="rowClicked"
-                  :row-class-name="tableRowClassStatus"
-                  highlight-current-row
-                  :row-style="{height:'20px'}"
-                  @cell-dblclick="editCell"
-                  @current-change="handleCurrentChange">
-            <!--            扩展详情-->
-            <el-table-column type="expand">
-                <template #default="props">
-                    <el-timeline>
-                        <el-timeline-item
-                                v-for="(item,index) in props.row.inoutstorage"
-                                :key="index"
-                                :size=timelineconfig.size
-                        >
-                            {{item.user}}
-                            <span v-show="item.direction=='in'?true:false" style="color: #67C23A">入库</span>
-                            <span v-show="item.direction=='out'?true:false" style="color: #F56C6C">出库</span>
-                            <span v-show="item.direction=='buy'?true:false" style="color: #67C23A">采购</span>
-                            数量:<span style="color:blueviolet">&nbsp;{{item.lcount}}&nbsp;</span>
-                            <span>日期: {{formatedate(item.operateday)}}&nbsp;</span>
-                            <span v-show="item.direction=='out'?true:false">
+        </el-header>
+        <el-main>
+            <!--        数据列表-->
+            <el-table v-loading.fullscreen.lock="loading"
+                      element-loading-text="数据正在加载中..."
+                      :data="storage" border style="width: 100%" @row-click="rowClicked"
+                      :row-class-name="tableRowClassStatus"
+                      highlight-current-row
+                      :row-style="{height:'20px'}"
+                      @cell-dblclick="editCell"
+                      @current-change="handleCurrentChange">
+                <!--            扩展详情-->
+                <el-table-column type="expand">
+                    <template #default="props">
+                        <el-timeline>
+                            <el-timeline-item
+                                    v-for="(item,index) in props.row.inoutstorage"
+                                    :key="index"
+                                    :size=timelineconfig.size
+                            >
+                                {{item.user}}
+                                <span v-show="item.direction=='in'?true:false" style="color: #67C23A">入库</span>
+                                <span v-show="item.direction=='out'?true:false" style="color: #F56C6C">出库</span>
+                                <span v-show="item.direction=='buy'?true:false" style="color: #67C23A">采购</span>
+                                数量:<span style="color:blueviolet">&nbsp;{{item.lcount}}&nbsp;</span>
+                                <span>日期: {{formatedate(item.operateday)}}&nbsp;</span>
+                                <span v-show="item.direction=='out'?true:false">
                                     <span v-show="item.customer==''?false:true">{{ "用户："+item.customer}}</span>
                                 </span>
-                        </el-timeline-item>
-                    </el-timeline>
-                </template>
-            </el-table-column>
-            <el-table-column prop="sId" label="库存代码" show-overflow-tooltip/>
-            <el-table-column prop="spartNumber" label="物料号" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-input v-model=scope.row.spartNumber v-if="scope.row.tbspartNumber"
-                              @blur="commitCell(scope.row,scope.row.spartNumber,scope.column)">
-                    </el-input>
-                    <span v-else>{{scope.row.spartNumber}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="sName" label="品名" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-input v-model=scope.row.sName v-if="scope.row.tbsName"
-                              @blur="commitCell(scope.row,scope.row.sName,scope.column)">
-                    </el-input>
-                    <span v-else>{{scope.row.sName}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="sDescription" label="描述" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-input v-model=scope.row.sDescription v-if="scope.row.tbsDescription"
-                              @blur="commitCell(scope.row,scope.row.sDescription,scope.column)">
-                    </el-input>
-                    <span v-else>{{scope.row.sDescription}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="sCount" label="库存" show-overflow-tooltip/>
-            <el-table-column prop="sUnit" label="单位" show-overflow-tooltip/>
-            <el-table-column prop="ssafeCount" label="安全库存" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-input v-model=scope.row.ssafeCount v-if="scope.row.tbsafeCount"
-                              @blur="commitCell(scope.row,scope.row.ssafeCount,scope.column)">
-                    </el-input>
-                    <span v-else>{{scope.row.ssafeCount}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="sArea" label="存放区域" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-input v-model=scope.row.sArea v-if="scope.row.tbsArea"
-                              @blur="commitCell(scope.row,scope.row.sArea,scope.column)">
-                    </el-input>
-                    <span v-else>{{scope.row.sArea}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="sPosition" label="存放库位" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-input v-model=scope.row.sPosition v-if="scope.row.tbsPosition"
-                              @blur="commitCell(scope.row,scope.row.sPosition,scope.column)">
-                    </el-input>
-                    <span v-else>{{scope.row.sPosition}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="updated" :formatter="formatUpdated" label="更新时间"
-                             show-overflow-tooltip/>
-            <el-table-column prop="remark" label="备注" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
-                              @blur="commitCell(scope.row,scope.row.remark, scope.column)">
-                    </el-input>
-                    <span v-else>{{scope.row.remark}}</span>
-                </template>
-            </el-table-column>
-        </el-table>
-        <!--页码-->
-        <div class="demo-pagination-block">
-            <el-pagination
-                    v-model:currentPage="currentPage"
-                    v-model:page-count="pageCount"
-                    layout="total, prev, pager, next"
-                    v-model:total="total"
-                    @current-change="currentChange"
+                            </el-timeline-item>
+                        </el-timeline>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sId" label="库存代码" show-overflow-tooltip/>
+                <el-table-column prop="spartNumber" label="物料号" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.spartNumber v-if="scope.row.tbspartNumber"
+                                  @blur="commitCell(scope.row,scope.row.spartNumber,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.spartNumber}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sName" label="品名" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.sName v-if="scope.row.tbsName"
+                                  @blur="commitCell(scope.row,scope.row.sName,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.sName}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sDescription" label="描述" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.sDescription v-if="scope.row.tbsDescription"
+                                  @blur="commitCell(scope.row,scope.row.sDescription,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.sDescription}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sCount" label="库存" show-overflow-tooltip/>
+                <el-table-column prop="sUnit" label="单位" show-overflow-tooltip/>
+                <el-table-column prop="ssafeCount" label="安全库存" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.ssafeCount v-if="scope.row.tbsafeCount"
+                                  @blur="commitCell(scope.row,scope.row.ssafeCount,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.ssafeCount}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sArea" label="存放区域" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.sArea v-if="scope.row.tbsArea"
+                                  @blur="commitCell(scope.row,scope.row.sArea,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.sArea}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sPosition" label="存放库位" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.sPosition v-if="scope.row.tbsPosition"
+                                  @blur="commitCell(scope.row,scope.row.sPosition,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.sPosition}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="updated" :formatter="formatUpdated" label="更新时间"
+                                 show-overflow-tooltip/>
+                <el-table-column prop="remark" label="备注" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
+                                  @blur="commitCell(scope.row,scope.row.remark, scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.remark}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!--页码-->
+            <div class="demo-pagination-block">
+                <el-pagination
+                        v-model:currentPage="currentPage"
+                        v-model:page-count="pageCount"
+                        layout="total, prev, pager, next"
+                        v-model:total="total"
+                        @current-change="currentChange"
+                >
+                </el-pagination>
+            </div>
+
+            <!--    添加库存列表对话框-->
+            <el-dialog
+                    v-model="addStorgeVisible"
+                    title="添加库存"
+                    width="50%"
             >
-            </el-pagination>
-        </div>
-    </el-card>
-    <!--    添加库存列表对话框-->
-    <el-dialog
-            v-model="addStorgeVisible"
-            title="添加库存"
-            width="50%"
-    >
-        <el-form
-                ref="addStorgeref"
-                :model="addStorgeForm"
-                :rules="addStorgerul"
-                label-width="300px"
-                class="addStorgeForm"
-        >
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <el-form-item label="库存代码" prop="sId" label-width="100px">
-                        <el-input v-model="addStorgeForm.sId"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="物料号" prop="spartNumber" label-width="100px">
-                        <el-input v-model="addStorgeForm.spartNumber"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <el-form-item label="品名" prop="sName" label-width="100px">
-                        <el-input v-model="addStorgeForm.sName"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="描述" prop="sDescription" label-width="100px">
-                        <el-input v-model="addStorgeForm.sDescription"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <el-form-item label="库存余量" prop="sCount" label-width="100px">
-                        <el-input v-model.number="addStorgeForm.sCount"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="单位" prop="sUnit" label-width="100px">
-                        <el-input v-model="addStorgeForm.sUnit"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <el-form-item label="安全库存" prop="ssafeCount" label-width="100px">
-                        <el-input v-model.number="addStorgeForm.ssafeCount"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="存放区域" prop="sArea" label-width="100px">
-                        <el-input v-model="addStorgeForm.sArea"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <el-form-item label="库位" prop="sPosition" label-width="100px">
-                        <el-input v-model="addStorgeForm.sPosition"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="备注" prop="remark" label-width="100px">
-                        <el-input v-model="addStorgeForm.remark"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-        </el-form>
-        <template #footer>
+                <el-form
+                        ref="addStorgeref"
+                        :model="addStorgeForm"
+                        :rules="addStorgerul"
+                        label-width="300px"
+                        class="addStorgeForm"
+                >
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="库存代码" prop="sId" label-width="100px">
+                                <el-input v-model="addStorgeForm.sId"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="物料号" prop="spartNumber" label-width="100px">
+                                <el-input v-model="addStorgeForm.spartNumber"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="品名" prop="sName" label-width="100px">
+                                <el-input v-model="addStorgeForm.sName"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="描述" prop="sDescription" label-width="100px">
+                                <el-input v-model="addStorgeForm.sDescription"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="库存余量" prop="sCount" label-width="100px">
+                                <el-input v-model.number="addStorgeForm.sCount"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="单位" prop="sUnit" label-width="100px">
+                                <el-input v-model="addStorgeForm.sUnit"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="安全库存" prop="ssafeCount" label-width="100px">
+                                <el-input v-model.number="addStorgeForm.ssafeCount"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="存放区域" prop="sArea" label-width="100px">
+                                <el-input v-model="addStorgeForm.sArea"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="库位" prop="sPosition" label-width="100px">
+                                <el-input v-model="addStorgeForm.sPosition"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="备注" prop="remark" label-width="100px">
+                                <el-input v-model="addStorgeForm.remark"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-form>
+                <template #footer>
             <span class="dialog-footer">
                 <el-button @click="addStorgeVisible = false">取消</el-button>
                 <el-button type="primary" @click="addStorage">确定</el-button>
             </span>
-        </template>
-    </el-dialog>
-    <!--    出库   -->
-    <el-dialog
-            v-model="outStorgeVisible"
-            title="出库记录"
-            width="50%">
-        <el-form
-                ref="outRef"
-                :model="outForm"
-                :rules="outRul"
-                label-width="300px"
-                class="outForm">
-            <el-form-item label="请输入数量" prop="outCount" label-width="100px">
-                <el-row>
-                    <el-col :span="4">
-                        <el-input v-model.number="this.outForm.outCount"></el-input>
-                    </el-col>
-                    <el-col :span="20">
-                        <!--                选择用途,这里主要是客户名称,得到订单号,然后就知道出库的备件是给了哪个订单-->
-                        <el-select v-model="selectId" class="m-2"
-                                   filterable
-                                   placeholder="选择所属订单" size="large" style="width: 100%">
-                            <el-option
-                                    v-for="item in orders"
-                                    :key="item.id"
-                                    :label="item.customer"
-                                    :value="item.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                </el-row>
-            </el-form-item>
-            <el-form-item label="备注" prop="outRemark" label-width="100px">
-                <el-input v-model="this.outForm.outRemark"></el-input>
-            </el-form-item>
-        </el-form>
-        <template #footer>
+                </template>
+            </el-dialog>
+            <!--    出库   -->
+            <el-dialog
+                    v-model="outStorgeVisible"
+                    title="出库记录"
+                    width="50%">
+                <el-form
+                        ref="outRef"
+                        :model="outForm"
+                        :rules="outRul"
+                        label-width="300px"
+                        class="outForm">
+                    <el-form-item label="请输入数量" prop="outCount" label-width="100px">
+                        <el-row>
+                            <el-col :span="4">
+                                <el-input v-model.number="this.outForm.outCount"></el-input>
+                            </el-col>
+                            <el-col :span="20">
+                                <!--                选择用途,这里主要是客户名称,得到订单号,然后就知道出库的备件是给了哪个订单-->
+                                <el-select v-model="selectId" class="m-2"
+                                           filterable
+                                           placeholder="选择所属订单" size="large" style="width: 100%">
+                                    <el-option
+                                            v-for="item in orders"
+                                            :key="item.id"
+                                            :label="item.customer"
+                                            :value="item.id"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </el-col>
+                        </el-row>
+                    </el-form-item>
+                    <el-form-item label="备注" prop="outRemark" label-width="100px">
+                        <el-input v-model="this.outForm.outRemark"></el-input>
+                    </el-form-item>
+                </el-form>
+                <template #footer>
             <span class="dialog-footer">
                 <el-button @click="outStorgeVisible = false">取消</el-button>
                 <el-button type="primary" @click="outStorage">确定</el-button>
             </span>
-        </template>
-    </el-dialog>
-    <!--    入库-->
-    <el-dialog
-            v-model="inStorgeVisible"
-            title="入库记录"
-            width="50%">
-        <el-form
-                ref="inRef"
-                :model="inForm"
-                :rules="inRul"
-                label-width="300px"
-                class="inForm">
-            <el-form-item label="请输入数量" prop="inCount" label-width="100px">
-                <el-input v-model.number="this.inForm.inCount"></el-input>
-            </el-form-item>
-            <el-form-item label="备注" prop="inRemark" label-width="100px">
-                <el-input v-model="this.inForm.inRemark"></el-input>
-            </el-form-item>
-        </el-form>
-        <template #footer>
+                </template>
+            </el-dialog>
+            <!--    入库-->
+            <el-dialog
+                    v-model="inStorgeVisible"
+                    title="入库记录"
+                    width="50%">
+                <el-form
+                        ref="inRef"
+                        :model="inForm"
+                        :rules="inRul"
+                        label-width="300px"
+                        class="inForm">
+                    <el-form-item label="请输入数量" prop="inCount" label-width="100px">
+                        <el-input v-model.number="this.inForm.inCount"></el-input>
+                    </el-form-item>
+                    <el-form-item label="备注" prop="inRemark" label-width="100px">
+                        <el-input v-model="this.inForm.inRemark"></el-input>
+                    </el-form-item>
+                </el-form>
+                <template #footer>
             <span class="dialog-footer">
                 <el-button @click="inStorgeVisible = false">取消</el-button>
                 <el-button type="primary" @click="inStorage">确定</el-button>
             </span>
-        </template>
-    </el-dialog>
-    <!--    采购-->
-    <el-dialog
-            v-model="buyStorgeVisible"
-            title="采购记录"
-            width="50%">
-        <el-form
-                ref="buyRef"
-                :model="buyForm"
-                :rules="buyRul"
-                label-width="300px"
-                class="inForm">
-            <el-form-item label="请输入数量" prop="buyCount" label-width="100px">
-                <el-input v-model.number="this.buyForm.buyCount"></el-input>
-            </el-form-item>
-            <el-form-item label="备注" label-width="100px">
-                <el-input v-model="this.buyForm.buyMark"></el-input>
-            </el-form-item>
-        </el-form>
-        <template #footer>
+                </template>
+            </el-dialog>
+            <!--    采购-->
+            <el-dialog
+                    v-model="buyStorgeVisible"
+                    title="采购记录"
+                    width="50%">
+                <el-form
+                        ref="buyRef"
+                        :model="buyForm"
+                        :rules="buyRul"
+                        label-width="300px"
+                        class="inForm">
+                    <el-form-item label="请输入数量" prop="buyCount" label-width="100px">
+                        <el-input v-model.number="this.buyForm.buyCount"></el-input>
+                    </el-form-item>
+                    <el-form-item label="备注" label-width="100px">
+                        <el-input v-model="this.buyForm.buyMark"></el-input>
+                    </el-form-item>
+                </el-form>
+                <template #footer>
             <span class="dialog-footer">
                 <el-button @click="buyStorgeVisible = false">取消</el-button>
                 <el-button type="primary" @click="buyStorage">确定</el-button>
             </span>
-        </template>
-    </el-dialog>
-    <!--    删除确认对话框-->
-    <el-dialog
-            v-model="deleteConfirmVisible"
-            title="确认删除"
-            width="50%">
-        <template #footer>
+                </template>
+            </el-dialog>
+            <!--    删除确认对话框-->
+            <el-dialog
+                    v-model="deleteConfirmVisible"
+                    title="确认删除"
+                    width="50%">
+                <template #footer>
             <span class="dialog-footer">
                 <el-button @click="deleteConfirmVisible = false">取消</el-button>
                 <el-button type="primary" @click="removeStorage">确定</el-button>
             </span>
-        </template>
-    </el-dialog>
-    <!--    数据库管理-->
-    <el-dialog
-            v-model="adminStorageVisible"
-            title="数据库管理"
-            width="50%">
+                </template>
+            </el-dialog>
+            <!--    数据库管理-->
+            <el-dialog
+                    v-model="adminStorageVisible"
+                    title="数据库管理"
+                    width="50%">
 
-        <el-row>
-            请选择需要导入的Excel文件：
-            <inXlsx ref="inXlsx" v-on:readxlsx="readxlsx"></inXlsx>
-        </el-row>
-        <el-row>
-            保存数据库：
-            <save-xlsx :savedata="alldata" v-if="saveflag" @click="adminStorageVisible = false"></save-xlsx>
-        </el-row>
-        <template #footer>
+                <el-row>
+                    请选择需要导入的Excel文件：
+                    <inXlsx ref="inXlsx" v-on:readxlsx="readxlsx"></inXlsx>
+                </el-row>
+                <el-row>
+                    保存数据库：
+                    <save-xlsx :savedata="alldata" v-if="saveflag" @click="adminStorageVisible = false"></save-xlsx>
+                </el-row>
+                <template #footer>
             <span class="dialog-footer">
                 <el-button @click="adminStorageVisible = false">确定</el-button>
             </span>
-        </template>
-    </el-dialog>
+                </template>
+            </el-dialog>
+        </el-main>
+    </el-container>
 </template>
 
 <script>
@@ -907,9 +910,9 @@
 </script>
 
 <style scoped>
-    .el-row {
-        margin-bottom: 20px;
-    }
+    /*.el-row {*/
+    /*    margin-bottom: 20px;*/
+    /*}*/
 
     .el-table >>> th {
         padding: 10px;
@@ -929,8 +932,14 @@
         justify-content: flex-start;
     }
 
-    ::v-deep .el-table__body tr.current-row>td {
-        background-color:  #95d475 !important;
+    ::v-deep .el-table__body tr.current-row > td {
+        background-color: #95d475 !important;
     }
 
+    .el-header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        vertical-align: middle;
+    }
 </style>

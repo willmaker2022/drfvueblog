@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-
 # Create your models here.
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 
 class CommonInfo(models.Model):
@@ -44,11 +45,13 @@ class Productplan(CommonInfo):
         verbose_name="订单类型",
     )
     # 型号
-    productid = models.CharField(max_length=10, verbose_name="产品型号")
+    productid = models.CharField(max_length=20, verbose_name="产品型号")
     # 序列号
-    serial = models.CharField(max_length=10, verbose_name="序列号")
+    serial = models.CharField(max_length=20, verbose_name="序列号")
     # 用户
     customer = models.CharField(max_length=20, verbose_name="用户")
+    # 配置单
+    conffile = models.FileField(upload_to='service_files/%Y%m%d/', blank=True)
     # 更新时间
     updated = models.DateTimeField(auto_now=True)
 
@@ -58,6 +61,11 @@ class Productplan(CommonInfo):
     class Meta:
         ordering = ('-updated',)
         verbose_name_plural = "订单管理"
+
+
+@receiver(pre_delete, sender=Productplan)
+def delete(sender, instance, **kwargs):
+    instance.conffile.delete(False)
 
 
 class ProcessElPrepare(CommonInfo):
@@ -209,6 +217,25 @@ class ProcessBilling(CommonInfo):
     class Meta:
         ordering = ('-updated',)
         verbose_name_plural = "开票"
+
+    def __str__(self):
+        return self.orderid.customer
+
+
+# 添加尾款状态
+class ProcessDueing(CommonInfo):
+    orderid = models.OneToOneField(
+        Productplan,
+        on_delete=models.CASCADE,
+        related_name='produe',
+        primary_key=True
+    )
+    # 更新时间
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-updated',)
+        verbose_name_plural = "尾款"
 
     def __str__(self):
         return self.orderid.customer

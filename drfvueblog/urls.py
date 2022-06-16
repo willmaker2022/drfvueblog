@@ -20,34 +20,35 @@ from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
 from user_info.views import UserViewSet
-from productplan.views import ProductViewSet, ProcessTestingViewSet, ProcessAssembleViewSet \
-    , ProcessElPrepareViewSet, ProcessMePrepareViewSet, ProcessScPrepareViewSet, ProductHistoryViewSet,\
-    ProcessSoftwareViewSet,ProcessBillingViewSet,ProcessDeliverViewSet,ProcessPaymentViewSet
-from storage.views import StorageViewSet,InOutStorageViewSet
-from Service.views import ServiceViewSet,BatchNoViewSet
+from productplan.views import ProductViewSet, ProcessTestingViewSet, ProcessAssembleViewSet, \
+    ProcessElPrepareViewSet, ProcessMePrepareViewSet, ProcessScPrepareViewSet, ProductHistoryViewSet, \
+    ProcessSoftwareViewSet, ProcessBillingViewSet, ProcessDeliverViewSet, ProcessPaymentViewSet, ProcessDueingViewSet
+from storage.views import StorageViewSet, InOutStorageViewSet
+from Service.views import ServiceViewSet, BatchNoViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
 router = DefaultRouter()
-router.register(r'user',UserViewSet)
-#订单管理
-router.register(r'home/product',ProductViewSet)
-router.register(r'home/processelprepare',ProcessElPrepareViewSet)
-router.register(r'home/processmeprepare',ProcessMePrepareViewSet)
-router.register(r'home/processscprepare',ProcessScPrepareViewSet)
-router.register(r'home/processassemble',ProcessAssembleViewSet)
-router.register(r'home/processpayment',ProcessPaymentViewSet)
-router.register(r'home/processtesting',ProcessTestingViewSet)
-router.register(r'home/processdeliver',ProcessDeliverViewSet)
-router.register(r'home/processsoftware',ProcessSoftwareViewSet)
+router.register(r'user', UserViewSet)
+# 订单管理
+router.register(r'home/product', ProductViewSet)
+router.register(r'home/processelprepare', ProcessElPrepareViewSet)
+router.register(r'home/processmeprepare', ProcessMePrepareViewSet)
+router.register(r'home/processscprepare', ProcessScPrepareViewSet)
+router.register(r'home/processassemble', ProcessAssembleViewSet)
+router.register(r'home/processpayment', ProcessPaymentViewSet)
+router.register(r'home/processtesting', ProcessTestingViewSet)
+router.register(r'home/processdeliver', ProcessDeliverViewSet)
+router.register(r'home/processsoftware', ProcessSoftwareViewSet)
 router.register(r'home/processbilling', ProcessBillingViewSet)
-router.register(r'home/producthistory',ProductHistoryViewSet)
-#库存管理
-router.register(r'home/storage',StorageViewSet)
+router.register(r'home/processdueing', ProcessDueingViewSet)
+router.register(r'home/producthistory', ProductHistoryViewSet)
+# 库存管理
+router.register(r'home/storage', StorageViewSet)
 router.register(r'home/inoutstorage', InOutStorageViewSet)
-#维修记录
+# 维修记录
 router.register(r'home/service', ServiceViewSet)
 router.register(r'home/batchno', BatchNoViewSet)
 
@@ -60,4 +61,3 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

@@ -1,7 +1,7 @@
 <template>
-    <el-card>
-        <!--    搜索-->
-        <el-row :gutter="12" margin-bottom=20px style="padding-bottom: 20px">
+    <el-container style="background: white">
+        <el-header style="padding-bottom: 0px;padding-top: 20px; padding-left: 20px">
+            <!--    搜索-->
             <el-col :span="6">
                 <el-input
                         v-model="searchInfo"
@@ -24,14 +24,16 @@
             <el-col :span="2" align="left">
                 <el-button type='primary' @click="addList">生成编号</el-button>
             </el-col>
-        </el-row>
-        <el-table :data="results" border style="width: 100%"
-                  highlight-current-row>
-            <el-table-column prop="batchno" label="编号"/>
-            <el-table-column prop="description" label="描述"/>
-            <el-table-column prop="created" :formatter="formatUpdated" label="创建日期"/>
-        </el-table>
-    </el-card>
+        </el-header>
+        <el-main>
+            <el-table :data="results" border style="width: 100%"
+                      highlight-current-row>
+                <el-table-column prop="batchno" label="编号"/>
+                <el-table-column prop="description" label="描述"/>
+                <el-table-column prop="created" :formatter="formatUpdated" label="创建日期"/>
+            </el-table>
+        </el-main>
+    </el-container>
 </template>
 
 <script>
@@ -140,11 +142,18 @@
     ::v-deep .el-table__body tr.current-row > td {
         background-color: #95d475 !important;
     }
+
     .el-table >>> th {
         padding: 10px;
     }
 
     .el-table >>> td {
         padding: 10px;
+    }
+    .el-header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        vertical-align: middle;
     }
 </style>

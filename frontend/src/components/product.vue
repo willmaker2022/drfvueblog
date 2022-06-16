@@ -1,7 +1,7 @@
 <template>
-    <el-card style="height: 100%; overflow: scroll">
-        <!--    搜索框和按钮-->
-        <el-row :gutter="12" margin-bottom=20px class="row-button">
+    <el-container style="background: white">
+        <el-header style="padding-bottom: 0px;padding-top: 20px; padding-left: 20px">
+            <!--    搜索框和按钮-->
             <el-col :span="6">
                 <el-input
                         v-model="searchInfo"
@@ -19,321 +19,340 @@
                 </el-button>
                 <span style="font-size: 20px; padding-left: 20px; font-weight:bolder">所有订单</span>
             </el-col>
-        </el-row>
-        <el-table v-loading.fullscreen.lock="loading" :data="product" @row-click="rowClicked"
-                  border
-                  @cell-dblclick="editCell"
-                  element-loading-text="数据正在加载中..."
-                  style="width: 100%"
-                  highlight-current-row
-                  :row-style="{height:'20px'}">
-            <el-table-column type="expand">
-                <template #default="props">
-                    <el-timeline>
-                        <el-timeline-item
-                                v-for="(item,index) in props.row.producthistory"
-                                :key="index"
-                                :timestamp=formatedate(item.operateday)
-                                :icon=timelineconfig.icon
-                                :size=timelineconfig.size
+        </el-header>
+        <el-main>
+            <el-table v-loading.fullscreen.lock="loading" :data="product" @row-click="rowClicked"
+                      border
+                      @cell-dblclick="editCell"
+                      element-loading-text="数据正在加载中..."
+                      style="width: 100%"
+                      highlight-current-row
+                      :row-style="{height:'20px'}">
+                <el-table-column type="expand">
+                    <template #default="props">
+                        <el-timeline>
+                            <el-timeline-item
+                                    v-for="(item,index) in props.row.producthistory"
+                                    :key="index"
+                                    :timestamp=formatedate(item.operateday)
+                                    :icon=timelineconfig.icon
+                                    :size=timelineconfig.size
+                            >
+                                <el-tag class="mx-1" size="large">{{item.user}}</el-tag>
+                                将
+                                <el-tag class="mx-1" size="large">{{item.proitem}}</el-tag>
+                                更改为
+                                <el-tag class="mx-1" size="large" :type="item.newcontent ==='进行中'?'danger':''">
+                                    {{item.newcontent}}
+                                </el-tag>
+                            </el-timeline-item>
+                        </el-timeline>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="orderid" label="订单号" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-link v-if="scope.row.conffile" :href="scope.row.conffile" target="_blank" class="buttonText"
+                                 type="primary" :underline="false">
+                            {{scope.row.orderid}}
+                        </el-link>
+                        <span v-else> {{scope.row.orderid}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="customer" label="用户" min-width="130px" show-overflow-tooltip/>
+                <el-table-column prop="productid" label="仪器型号" show-overflow-tooltip/>
+                <el-table-column prop="serial" label="序列号" show-overflow-tooltip/>
+                <el-table-column prop="startday" label="入单日期" show-overflow-tooltip/>
+                <el-table-column prop="endday" label="交货日期" show-overflow-tooltip/>
+                <el-table-column prop="elsta" label="电路板状态">
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.elsta
+                                   @change="changeELSta(scope.row)"
+                                   :class="scope.row.elsta"
                         >
-                            <el-tag class="mx-1" size="large">{{item.user}}</el-tag>
-                            将
-                            <el-tag class="mx-1" size="large">{{item.proitem}}</el-tag>
-                            更改为
-                            <el-tag class="mx-1" size="large" :type="item.newcontent ==='进行中'?'danger':''">
-                                {{item.newcontent}}
-                            </el-tag>
-                        </el-timeline-item>
-                    </el-timeline>
-                </template>
-            </el-table-column>
-            <el-table-column prop="orderid" label="订单号" show-overflow-tooltip/>
-            <el-table-column prop="customer" label="用户" min-width="130px" show-overflow-tooltip/>
-            <el-table-column prop="productid" label="仪器型号" show-overflow-tooltip/>
-            <el-table-column prop="serial" label="序列号" show-overflow-tooltip/>
-            <el-table-column prop="startday" label="开始日期" show-overflow-tooltip/>
-            <el-table-column prop="endday" label="交货日期" show-overflow-tooltip/>
-<!--            <el-table-column prop="category" label="类型" width="60" :formatter="formateCategory"/>-->
-<!--            <el-table-column prop="status" label="整体状态" width="80">-->
-<!--                <template v-slot:default="scope">-->
-<!--                    <el-select v-model=scope.row.status-->
-<!--                               @change="changeProSta(scope.row)"-->
-<!--                               :class="scope.row.status"-->
-<!--                    >-->
-<!--                        <el-option-->
-<!--                                v-for="item in staopts"-->
-<!--                                :key="item.value"-->
-<!--                                :label="item.label"-->
-<!--                                :value="item.value"-->
-<!--                                :disabled=getDisabledInfo(scope.row.status,item.value)-->
-<!--                        >-->
-<!--                        </el-option>-->
-<!--                    </el-select>-->
-<!--                </template>-->
-<!--            </el-table-column>-->
-            <el-table-column prop="elsta" label="电路板状态" >
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.elsta
-                               @change="changeELSta(scope.row)"
-                               :class="scope.row.elsta"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.elsta,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="mesta" label="机械件状态" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.mesta
-                               @change="changeMESta(scope.row)"
-                               :class="scope.row.mesta"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.mesta,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="scsta" label="干涉仪状态" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.scsta
-                               @change="changeSCSta(scope.row)"
-                               :class="scope.row.scsta"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.scsta,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="assta" label="装配状态" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.assta
-                               @change="changeASSta(scope.row)"
-                               :class="scope.row.assta"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.assta,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="tssta" label="测试状态" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.tssta
-                               @change="changeTSSta(scope.row)"
-                               :class="scope.row.tssta"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.tssta,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="swsta" label="软件状态" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.swsta
-                               @change="changeSWSta(scope.row)"
-                               :class="scope.row.swsta"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.swsta,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="pmsta" label="付款状态" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.pmsta
-                               @change="changePMSta(scope.row)"
-                               :class="scope.row.pmsta"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.pmsta,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="dista" label="发货状态" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.dista
-                               @change="changeDISta(scope.row)"
-                               :class="scope.row.dista"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.dista,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column prop="bista" label="开票状态" show-overflow-tooltip>
-                <template v-slot:default="scope">
-                    <el-select v-model=scope.row.bista
-                               @change="changeBISta(scope.row)"
-                               :class="scope.row.bista"
-                    >
-                        <el-option
-                                v-for="item in staopts"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                                :disabled=getDisabledInfo(scope.row.bista,item.value)
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-<!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
-            <el-table-column prop="remark" label="备注" show-overflow-tooltip min-width="130px">
-                <template v-slot:default="scope">
-                    <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
-                              @blur="commitCell(scope.row,scope.row.remark,scope.column)">
-                    </el-input>
-                    <span v-else>{{scope.row.remark}}</span>
-                </template>
-            </el-table-column>
-        </el-table>
-
-        <div class="demo-pagination-block">
-            <el-pagination
-                    v-model:currentPage="currentPage"
-                    v-model:page-count="pageCount"
-                    layout="total, prev, pager, next"
-                    v-model:total="total"
-                    @current-change="CurrentChange">
-            </el-pagination>
-        </div>
-    </el-card>
-    <!--    添加产品订单对话框-->
-    <el-dialog
-            v-model="addProductVisible"
-            title="添加产品订单"
-            width="50%"
-    >
-        <el-form
-                ref="addProductRef"
-                :model="addProductForm"
-                :rules="addProductRul"
-                label-width="300px"
-                class="addStorgeForm"
-        >
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <el-form-item label="订单号" prop="orderid" label-width="100px">
-                        <el-input v-model="addProductForm.orderid"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="仪器型号" prop="productid" label-width="100px">
-                        <el-input v-model="addProductForm.productid"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <el-form-item label="序列号" prop="serial" label-width="100px">
-                        <el-input v-model="addProductForm.serial"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="订单类型" prop="category" label-width="100px">
-                        <el-select v-model=addProductForm.category placeholder="选择订单类型">
                             <el-option
-                                    v-for="item in oropts"
+                                    v-for="item in staopts"
                                     :key="item.value"
                                     :label="item.label"
                                     :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.elsta,item.value)
                             >
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="20">
-                <el-col :span="12">
-                    <el-form-item label="用户" prop="customer" label-width="100px">
-                        <el-input v-model="addProductForm.customer"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="交货日期" prop="endday" label-width="100px">
-                        <el-date-picker v-model="addProductForm.endday" type="date"
-                                        value-format="YYYY-MM-DD"
-                                        placeholder="Pick a day">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="20">
-
-                <el-col :span="24">
-                    <el-form-item label="备注" prop="remark" label-width="100px">
-                        <el-input v-model="addProductForm.remark"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-        </el-form>
-        <template #footer>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="mesta" label="机械件状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.mesta
+                                   @change="changeMESta(scope.row)"
+                                   :class="scope.row.mesta"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.mesta,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="scsta" label="干涉仪状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.scsta
+                                   @change="changeSCSta(scope.row)"
+                                   :class="scope.row.scsta"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.scsta,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="assta" label="装配状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.assta
+                                   @change="changeASSta(scope.row)"
+                                   :class="scope.row.assta"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.assta,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="tssta" label="测试状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.tssta
+                                   @change="changeTSSta(scope.row)"
+                                   :class="scope.row.tssta"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.tssta,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="swsta" label="软件状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.swsta
+                                   @change="changeSWSta(scope.row)"
+                                   :class="scope.row.swsta"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.swsta,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="pmsta" label="货前款状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.pmsta
+                                   @change="changePMSta(scope.row)"
+                                   :class="scope.row.pmsta"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.pmsta,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="dista" label="发货状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.dista
+                                   @change="changeDISta(scope.row)"
+                                   :class="scope.row.dista"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.dista,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="bista" label="开票状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.bista
+                                   @change="changeBISta(scope.row)"
+                                   :class="scope.row.bista"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.bista,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="duesta" label="尾款状态" show-overflow-tooltip>
+                    <template v-slot:default="scope">
+                        <el-select v-model=scope.row.duesta
+                                   @change="changeDUESta(scope.row)"
+                                   :class="scope.row.duesta"
+                        >
+                            <el-option
+                                    v-for="item in staopts"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    :disabled=getDisabledInfo(scope.row.duesta,item.value)
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <!--            <el-table-column prop="updated" :formatter="formatUpdated" label="更新日期" width="100"/>-->
+                <el-table-column prop="remark" label="备注" show-overflow-tooltip min-width="130px">
+                    <template v-slot:default="scope">
+                        <el-input v-model=scope.row.remark v-if="scope.row.tbremark"
+                                  @blur="commitCell(scope.row,scope.row.remark,scope.column)">
+                        </el-input>
+                        <span v-else>{{scope.row.remark}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!--            页脚-->
+            <div class="demo-pagination-block">
+                <el-pagination
+                        v-model:currentPage="currentPage"
+                        v-model:page-count="pageCount"
+                        layout="total, prev, pager, next"
+                        v-model:total="total"
+                        @current-change="CurrentChange">
+                </el-pagination>
+            </div>
+            <!--    添加产品订单对话框-->
+            <el-dialog
+                    v-model="addProductVisible"
+                    title="添加产品订单"
+                    width="50%"
+            >
+                <el-form
+                        ref="addProductRef"
+                        :model="addProductForm"
+                        :rules="addProductRul"
+                        label-width="300px"
+                        class="addStorgeForm"
+                >
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="订单号" prop="orderid" label-width="100px">
+                                <el-input v-model="addProductForm.orderid"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="仪器型号" prop="productid" label-width="100px">
+                                <el-input v-model="addProductForm.productid"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="序列号" prop="serial" label-width="100px">
+                                <el-input v-model="addProductForm.serial"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="订单类型" prop="category" label-width="100px" align="left">
+                                <el-select v-model=addProductForm.category placeholder="选择订单类型">
+                                    <el-option
+                                            v-for="item in oropts"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="用户" prop="customer" label-width="100px">
+                                <el-input v-model="addProductForm.customer"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="交货日期" prop="endday" label-width="100px" align="left">
+                                <el-date-picker v-model="addProductForm.endday" type="date"
+                                                value-format="YYYY-MM-DD"
+                                                placeholder="Pick a day">
+                                </el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="24">
+                            <el-form-item label="备注" prop="remark" label-width="100px">
+                                <el-input v-model="addProductForm.remark"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="24">
+                            <el-form-item prop="remark" label-width="100px" align="left">
+                                <el-upload :on-change="handleUpload"
+                                           action="#"
+                                           :auto-upload="false">
+                                    <el-button type="primary">请上传配置单</el-button>
+                                </el-upload>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-form>
+                <template #footer>
             <span class="dialog-footer">
                 <el-button @click="addProductVisible = false">取消</el-button>
                 <el-button type="primary" @click="addProduct">确定</el-button>
             </span>
-        </template>
-    </el-dialog>
-    <!--    删除确认对话框-->
-    <el-dialog
-            v-model="deleteVisible"
-            title="确认删除"
-            width="50%">
-        <template #footer>
+                </template>
+            </el-dialog>
+            <!--    删除确认对话框-->
+            <el-dialog
+                    v-model="deleteVisible"
+                    title="确认删除"
+                    width="50%">
+                <template #footer>
             <span class="dialog-footer">
                 <el-button @click="deleteVisible = false">取消</el-button>
                 <el-button type="primary" @click="remove">确定</el-button>
             </span>
-        </template>
-    </el-dialog>
+                </template>
+            </el-dialog>
+        </el-main>
+    </el-container>
 </template>
 
 <script>
@@ -342,37 +361,13 @@
     import qs from "qs";
     import authorization from "../../utils/authorization";
     import {BIconAlarm} from 'bootstrap-icons-vue'
-    // 所有订单
-    // const orders = {
-    //     product: [],
-    //     allorder: [],
-    //     pages: 0,
-    // }
-    // const products = async () => {
-    //     //第一次读取，得到页数。
-    //     await axios.get('/api/home/product/').then(res => {
-    //         orders.pages = Math.ceil(res.data.count / 20);
-    //         orders.allorder = res.data.results;
-    //         orders.product = res.data.results;
-    //     })
-    //     for (var n = 1; n < orders.pages; n++) {
-    //         await axios.get('/api/home/product/', {params: {page: n}})
-    //             .then(res => {
-    //                 for (var index = 0; index < res.data.results.length; index++) {
-    //                     orders.allorder.push(res.data.results[index]);
-    //                 }
-    //             })
-    //     }
-    //     return orders.allorder;
-    // }
+
     export default {
         name: "productPlan",
         components: {
             Search,
             BIconAlarm,
         },
-        // orders,
-        // products: products(),
         data() {
             return {
                 loading: true,
@@ -424,8 +419,10 @@
                     customer: "",
                     productid: "",
                     serial: "",
+                    startday: "",
                     endday: "",
-                    category: "",
+                    category: "std",
+                    conffile: "",
                 },
                 addStaForm: {
                     order_id: "",
@@ -520,7 +517,7 @@
                 } else {
                     this.product = []
                 }
-                this.loading=false;
+                this.loading = false;
             },
             //修改select的disabled参数
             getDisabledInfo(sta, selectValue) {
@@ -549,7 +546,7 @@
                     this.product = res.data.results;
                     this.total = res.data.count;
                     this.pageCount = Math.ceil(this.total / 16);
-                    this.loading=false;
+                    this.loading = false;
                 });
             },
             getProductPage(page) {
@@ -559,11 +556,11 @@
                     }
                 }).then(res => {
                     this.product = res.data.results;
-                    this.loading=false;
+                    this.loading = false;
                 })
             },
             CurrentChange(currentPage) {
-                this.loading=true;
+                this.loading = true;
                 this.getProductPage(currentPage);
             },
             //修改更新时间为只有日期
@@ -581,7 +578,7 @@
             },
             //在订单历史中添加一条，此订单历史只增加，不删除，不修改
             async addProductHistory(orderid, item, newcontent) {
-                console.log('orderid',orderid)
+                console.log('orderid', orderid)
                 let newsta;
                 if (newcontent === "process") {
                     newsta = "进行中";
@@ -603,8 +600,8 @@
                     const dat = new Date();
                     //增加主要订单信息
                     await axios.post('/api/home/producthistory/',
-                            qs.stringify({orderid_id: orderid, proitem: item, newcontent: newsta, operateday: dat}),
-                            {headers: {Authorization: 'Bearer ' + localStorage.getItem('access.product')}})
+                        qs.stringify({orderid_id: orderid, proitem: item, newcontent: newsta, operateday: dat}),
+                        {headers: {Authorization: 'Bearer ' + localStorage.getItem('access.product')}})
                         .then(res => {
                             console.log(res)
                         });
@@ -625,50 +622,69 @@
                 if (auth) {
                     const dat = new Date();
                     const stday = dat.toISOString().substr(0, 10, 10);
-                    //增加主要订单信息
-                    await axios.post('/api/home/product/', qs.stringify(this.addProductForm)).then(res => {
+                    let param = new FormData()
+                    param.append('orderid', this.addProductForm.orderid)
+                    param.append('customer', this.addProductForm.customer)
+                    param.append('productid', this.addProductForm.productid)
+                    param.append('serial', this.addProductForm.serial)
+                    param.append('startday', stday)
+                    param.append('endday', this.addProductForm.endday)
+                    param.append('category', this.addProductForm.category)
+                    param.append('conffile', this.addProductForm.conffile)
+                    await axios.post('/api/home/product/', param,
+                        {
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('access.product'),
+                            }
+                        }).then(res => {
                         this.addStaForm.order_id = res.data.id;
                         this.getProduct();
                     })
-                    //增加电路板条目信息
-                    axios.post('/api/home/processelprepare/', {
-                        orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
-                        startday: stday,
-                    }).then(res => {
-                        console.log(res);
-                    })
-                    //增加机械件条目信息
-                    axios.post('/api/home/processmeprepare/', {
-                        orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
-                        startday: stday,
-                    }).then(res => {
-                        console.log(res);
-                    })
-                    //增加干涉仪条目信息
-                    axios.post('/api/home/processscprepare/', {
-                        orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
-                        startday: stday,
-                    }).then(res => {
-                        console.log(res);
-                    })
-                    //增加装配条目信息
-                    axios.post('/api/home/processassemble/', {
-                        orderid_id: this.addStaForm.order_id,
-                        status: this.addStaForm.status
-                    }).then(res => {
-                        console.log(res);
-                    })
-                    //增加测试条目信息
-                    axios.post('/api/home/processtesting/', {
-                        orderid_id: this.addStaForm.order_id,
-                        status: this.addStaForm.status
-                    }).then(res => {
-                        console.log(res);
-                    })
+                    // this.addProductForm.startday = stday;
+                    // //增加主要订单信息
+                    // await axios.post('/api/home/product/', qs.stringify(this.addProductForm)).then(res => {
+                    //     this.addStaForm.order_id = res.data.id;
+                    //     this.getProduct();
+                    // })
+                    // //增加电路板条目信息
+                    // axios.post('/api/home/processelprepare/', {
+                    //     orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
+                    //     startday: stday,
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
+                    // //增加机械件条目信息
+                    // axios.post('/api/home/processmeprepare/', {
+                    //     orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
+                    //     startday: stday,
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
+                    // //增加干涉仪条目信息
+                    // axios.post('/api/home/processscprepare/', {
+                    //     orderid_id: this.addStaForm.order_id, status: this.addStaForm.status,
+                    //     startday: stday,
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
+                    // //增加装配条目信息
+                    // axios.post('/api/home/processassemble/', {
+                    //     orderid_id: this.addStaForm.order_id,
+                    //     status: this.addStaForm.status
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
+                    // //增加测试条目信息
+                    // axios.post('/api/home/processtesting/', {
+                    //     orderid_id: this.addStaForm.order_id,
+                    //     status: this.addStaForm.status
+                    // }).then(res => {
+                    //     console.log(res);
+                    // })
                 }
                 this.addProductVisible = false;
             },
-            // 选择条目，，可以修改该条目信息
+            // 选择条目，可以修改该条目信息
             rowClicked(row) {
                 this.selectedRow = row.id;
                 this.removeDisabled = false;
@@ -723,6 +739,11 @@
             async changeBISta(row) {
                 await this.changeStatus('processbilling', row.bista, row.id)
                 await this.addProductHistory(row.id, "开票状态", row.bista);
+            },
+            // //改变尾款状态
+            async changeDUESta(row) {
+                await this.changeStatus('processdueing', row.duesta, row.id)
+                await this.addProductHistory(row.id, "尾款状态", row.duesta);
             },
             //改变状态通用函数
             async changeStatus(address, newStatus, orderid) {
@@ -798,7 +819,7 @@
                 })
             },
             goback() {
-                this.loading=true
+                this.loading = true
                 this.getProductPage(this.currentPage)
             },
             async remove() {
@@ -808,6 +829,10 @@
                     }
                 );
                 this.deleteVisible = false;
+            },
+            //上传配置单
+            handleUpload(file) {
+                this.addProductForm.conffile = file.raw;
             }
         },
         created() {
@@ -817,9 +842,9 @@
 </script>
 
 <style scoped>
-    .el-row {
-        margin-bottom: 20px;
-    }
+    /*.el-row {*/
+    /*    margin-bottom: 20px;*/
+    /*}*/
 
     .el-table {
         width: 100%;
@@ -859,9 +884,14 @@
         padding-bottom: 0px;
     }
 
-    ::v-deep .el-table__body tr.current-row>td {
-        background-color:  #95d475 !important;
+    ::v-deep .el-table__body tr.current-row > td {
+        background-color: #95d475 !important;
     }
 
-
+    .el-header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        vertical-align: middle;
+    }
 </style>
