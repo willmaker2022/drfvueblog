@@ -11,7 +11,7 @@ class StorageViewSet(viewsets.ModelViewSet):
     # filter_backends = [DjangoFilterBackend]
     # filterset_fields = ['sname']
     filter_backends = [filters.SearchFilter]
-    search_fields = ['sName','sId']
+    search_fields = ['sName','sId','sDescription']
 
 
 #出入库记录

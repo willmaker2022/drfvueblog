@@ -795,7 +795,7 @@
             },
             async readxlsx(val) {
                 // console.log('-----------')
-                // console.log(val.length)
+                console.log(val)
                 for (var i = 0; i < val.length; i++) {
                     this.addStorgeForm.sId = val[i].库存品代码
                     this.addStorgeForm.spartNumber = val[i].物料号
